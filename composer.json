@@ -17,7 +17,7 @@
         "topthink/framework": "5.1.*",
         "topthink/think-captcha": "2.0.*",
         "big-dream/think-paginator-driver": "^1.0",
-        "tp5er/tp5-databackup": "dev-master",
+        "xianrenqh/tp5-databackup": "dev-master",
         "phpmailer/phpmailer": "^6.1"
     },
     "autoload": {
