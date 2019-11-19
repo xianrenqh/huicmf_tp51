@@ -116,7 +116,7 @@ switch ($step) {
             $mbstring = '<span class="correct_span error_span">&radic;</span> 不支持';
             $err++;
         }
-        $folder =["public",'databack','runtime'];
+        $folder =["public",'runtime'];
         include ("./templates/s2.php");
         exit();
     
