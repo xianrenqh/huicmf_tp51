@@ -1,0 +1,45 @@
+{include file='header'/}
+<body>
+<article class="weadmin-body">
+    <div class="formdoby_normal">
+        <form method="post">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                     <td>模块名称：</td>
+                     <td>{$config.name}</td>
+                </tr>
+                <tr>
+                    <td>模块简介：</td>
+                    <td>{$config.description}</td>
+                </tr>
+                <tr>
+                    <td>作者：</td>
+                    <td>{$config.author}</td>
+                </tr>
+                <tr>
+                    <td>作者邮箱：</td>
+                    <td>{$config.authoremail}</td>
+                </tr>
+                <tr>
+                    <td>作者主页：</td>
+                    <td>{$config.authorsite}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="layui-form-item" style="float: right">
+                <button class="layui-btn"  name="dosubmit" value="1">提交</button>
+                <button class="layui-btn layui-btn-primary"  onclick="myclose()" >取消</button>
+            </div>
+        </form>
+    </div>
+</article>
+{include file='footer'/}
+<script type="text/javascript">
+    function myclose(){
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+</script>
+</body>
+</html>

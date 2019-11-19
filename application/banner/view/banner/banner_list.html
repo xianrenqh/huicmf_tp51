@@ -1,0 +1,75 @@
+{include file='../application/admin/view/header.html'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+    .layui-table th {text-align: center}
+</style>
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">模块管理</a><span lay-separator="">/</span>
+            <a><cite>轮播图管理</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+    <div class="layui-row demoTable" style="margin: 5px auto 15px">
+        <div class="weadmin-block">
+            <a class="layui-btn" onclick="WeAdminShow('增加幻灯','{:url('add')}','800')" href="javascript:;"><i class="layui-icon layui-icon-add-circle-fine"></i> 增加幻灯</a>
+            <span class="fr" style="line-height:40px;padding-right: 10px;">共有数据：<span id="total"><?php echo $total;?></span> 条</span>
+        </div>
+        <form method="post" action="{:url('del')}" id="myform">
+            <table class="layui-table" style="text-align: center">
+                <thead>
+                <tr class="text-c">
+                    <th>排序</th>
+                    <th>名称</th>
+                    <th>图片</th>
+                    <th>链接地址</th>
+                    <th>添加时间</th>
+                    <th>分类</th>
+                    <th>状态</th>
+                    <th>管理操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="items" id="vo"}
+                <tr class="text-c">
+                    <td>{$vo.id}</td>
+                    <td><a href="{$vo.url}" target="_blank">{$vo.title}</a></td>
+                    <td><a href="{$vo.url}" target="_blank" title="{$vo.title}"><img src="{$vo.image}" style="height:88px;width:200px"></a></td>
+                    <td>{$vo.url}</td>
+                    <td>{$vo.inputtime||date='Y-m-d H:i:s'}</td>
+                    <td>{$vo.typename}</td>
+                    <td>{if ($vo.status==1)}显示{else}<span style="color:red;">隐藏</span>{/if}</td>
+                    <td class="td-manage">
+                        <a class="layui-btn layui-btn-sm layui-btn-normal" onclick="edit('{$vo.id}')">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-sm" onclick="del('{$vo.id}')">删除</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </form>
+        <div class="mws-panel-content">
+            <div class="list-page">
+                {$data->render()|raw}
+            </div>
+        </div>
+    </div>
+</div>
+{include file='../application/admin/view/footer.html'/}
+</body>
+</html>
+<script>
+    function del(id){
+        WeAdminDel("{:url('del')}?id="+id);
+    }
+    function edit(id) {
+        WeAdminShow("编辑","{:url('edit')}?id="+id,'880','500');
+    }
+    function add() {
+        WeAdminShow("增加","{:url('add')}",'800','500');
+    }
+</script>

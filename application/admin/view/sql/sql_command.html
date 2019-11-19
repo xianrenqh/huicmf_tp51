@@ -1,0 +1,95 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+    .layui-input-block{margin-left: 0;}
+    #message {font-weight: bold;font-size: 18px;color:#ff291d;}
+</style>
+<body>
+<div class="weadmin-nav">
+    <span class="layui-breadcrumb">
+         <a href="">首页</a><span lay-separator="">/</span>
+        <a href="">系统管理</a><span lay-separator="">/</span>
+        <a><cite>SQL命令行</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+    <blockquote class="layui-elem-quote ">
+        注意：<b style="color:#FF5722">1、执行SQL将直接操作数据库，请谨慎使用</b>（表前缀可用“hui_”代替）<br>
+        &emsp;&emsp;&emsp;<b style="color:#025bb2">2、系统默认禁止执行后台sql命令操作，如需更改，请到config/database.php文件更改sql_execute项的值为1</b>
+    </blockquote>
+    <form class="layui-form" action="javascript:;" onsubmit="return check_all()">
+        <div class="layui-form-item">
+            <div class="layui-l-block">
+                <textarea name="sqlstr" id="sqlstr" placeholder="请输入SQL，多行请用 ; 间隔" class="layui-textarea"><?php if(isset($sqlstr)) echo $sqlstr;?></textarea>
+                <input type="hidden" name="action" value="many" id="action">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" onclick="setacton('single')" >执行单条SQL</button>
+                <button class="layui-btn " onclick="setacton('many')">执行多条SQL</button>
+            </div>
+        </div>
+    </form>
+    <div id="message"></div>
+
+    <table class="layui-table"  id="return_table">
+        <thead><tr></tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
+{include file='footer'/}
+<script>
+    function setacton(action) {
+        $("#action").val(action);
+    }
+    function check_all() {
+        var sqlstr =$("#sqlstr").val();
+        if(sqlstr==""){
+            layer.msg("SQL不能为空！");
+            return false;
+        }
+        var reg = /^delete/i;
+        var reg2 = /^(.*)where(.*)/i;
+        if(reg.test(sqlstr) && !reg2.test(sqlstr) ){
+            layer.confirm('检测到delete语句没有加where条件，是否继续？',function(index){
+                dosub();
+            });
+            return false;
+        }
+        dosub();
+    }
+    function dosub() {
+        $.ajax({
+            type: 'POST',
+            url: '{:url('do_sql')}',
+            data: {
+                sqlstr:$("#sqlstr").val(),
+                action:$("#action").val(),
+            },
+            dataType: "json",
+            success: function (res) {
+                if(res.status==200){
+                    layer.msg(res.message, {
+                        icon: 1,
+                        time: 2000
+                    });
+                    $("#message").html(res.message);
+                    $("#return_table thead tr").html(res.data.data_key);
+                    $("#return_table tbody").html(res.data.data_row);
+                }else{
+                    $("#message").html(res.message);
+                    layer.msg(res.message, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+
+            }
+        });
+        return false;
+    }
+</script>
+</body>
+</html>

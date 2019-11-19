@@ -1,0 +1,103 @@
+{include file='header'/}
+<style>
+    .layui-form-label{width: 90px;}
+    .layui-input-block{margin-left: 120px;}
+</style>
+<body>
+<div class="weadmin-body">
+    <form method="post" class="layui-form" action="javascript:;" onsubmit="return dosub(this)" lay-filter="test">
+        <div class="layui-form-item">
+            <label for="adminname" class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" id="adminname" name="adminname"  value="{$data.adminname}" class="layui-input readonly-bg" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="old_password" class="layui-form-label">旧密码</label>
+            <div class="layui-input-block">
+                <input type="text" id="old_password" name="old_password"  value="" class="layui-input" lay-verify="oldPwd|required" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="password" class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" id="password" name="password"  value="" class="layui-input" lay-verify="newPwd|required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="password2" class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" id="password2" name="password2"  value="" class="layui-input" lay-verify="regpwd|required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+            </label>
+            <button class="layui-btn" name="dosubmit" value="1"  lay-submit="">确定</button>
+        </div>
+    </form>
+</div>
+
+{include file='footer'/}
+</body>
+</html>
+<script>
+    layui.use(['form','element'], function(){
+        var $ = layui.jquery
+            ,form = layui.form
+            ,element = layui.element;
+        form.verify({
+            //判断旧密码是否正确
+            oldPwd:function(value,item){
+                var msg = '';
+                $.ajax({
+                    url: "{:url('public_edit_pwd')}",
+                    type: "post",
+                    async: false,
+                    data: {
+                        adminname:$("#adminname").val(),
+                        oldpwd:value,
+                        dosubmit:1,
+                        type:'oldpwd'
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        msg = data.state;
+                    }
+                });
+                if(msg!=200){return "旧密码输入错误，请重新输入！";}
+            },
+            newPwd: [
+                /^[\S]{6,18}$/
+                ,'密码必须6到18位，且不能出现空格'
+            ],
+            regpwd:function (value) {
+                if($("#password").val()!=value){
+                    return "两次输入密码不一致，请重新输入！";
+                }
+            }
+        });
+    });
+    function dosub(obj) {
+        //var index = layer.msg('修改成功！！', { icon: 16, time: false, shade: 0.8 });
+        $.ajax({
+            url: "{:url('public_edit_pwd')}",
+            type: "post",
+            async: false,
+            data: {
+                adminname:$("#adminname").val(),
+                newpwd:$("#password").val(),
+                dosubmit:1,
+                type:'newpwd'
+            },
+            dataType: "json",
+            success: function (data) {
+                /*setTimeout(function () {
+                    layer.close(index);
+                    layer.msg(data.msg, {icon: data.icon});
+                }, 1000);*/
+                layer.msg(data.msg, {icon: data.icon});
+            }
+        });
+    }
+</script>

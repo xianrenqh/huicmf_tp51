@@ -1,0 +1,126 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+</style>
+
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">管理员管理</a><span lay-separator="">/</span>
+            <a><cite>管理员列表</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+
+    <div class="layui-row demoTable" style="margin: 5px auto 15px">
+        <form class="layui-form layui-col-md12" action="javascript:;" id="form_admin_search">
+            搜索：
+            <div class="layui-inline">
+                <input type="text" name="adminname" id="adminname" placeholder="请输入登录名" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline" style="width: 160px;text-align: center">
+                <select name="roles" id="roles">
+                    <option value="0">==请选择角色==</option>
+                    {foreach $role_list as $key=>$v}
+                    <option value="{$v.roleid}">{$v.rolename}</option>
+                    {/foreach}
+                </select>
+            </div>
+
+            <div class="layui-input-inline"  style="width:150px;text-align: center">
+                <select name="status" id="isuse">
+                    <option value="99">==是否启用==</option>
+                    <option value="1">已启用</option>
+                    <option value="0">已禁用</option>
+                </select>
+            </div>
+            <button class="layui-btn" data-type="reload" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i>搜索</button>
+            <button class="layui-btn layui-btn-danger" type="reset"><i class="layui-icon">&#xe63f;</i>清空</button>
+        </form>
+    </div>
+
+    <div class="weadmin-block">
+        <button class="layui-btn" onclick="WeAdminShow('添加管理员','{:url('add')}','800','550')"><i class="layui-icon"></i>添加</button>
+        <span class="fr" style="line-height:40px;padding-right: 10px;">共有数据：<span  id="total"><?php echo $total;?></span> 条</span>
+    </div>
+    <table id="role_list" lay-filter="role_list"></table>
+</div>
+
+<script type="text/html" id="status">
+    {{#  if(d.status ==1){ }}
+    <span class="layui-btn layui-btn-sm" onclick="change_s({{d.adminid}})">已启用</span>
+    {{#  } else { }}
+    <span class="layui-btn layui-btn-danger layui-btn-sm" onclick="change_s({{d.adminid}})">已禁用</span>
+    {{#  } }}
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">删除</a>
+</script>
+
+</body>
+{include file='footer'/}
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#role_list'
+            ,page: false
+            ,where:{do:1}
+            ,method: 'post'
+            ,url: '{:url('init')}' //数据接口
+            ,done: function(res){ //res 即为原始返回的数据
+                $("#total").html(res.count);
+            }
+            ,cols: [[ //表头
+                {type:'numbers'}
+                //{field: 'roleid', title: 'ID', width:100, sort: true, fixed: 'left',align:'center'}
+                ,{field: 'adminname', title: '登录名'}
+                ,{field: 'rolename', title: '角色名'}
+                ,{field: 'email', title: '邮箱'}
+                ,{field: 'logintime', title: '上次登录时间'}
+                ,{field: 'loginip', title: '上次登录IP'}
+                ,{field: 'addtime', title: '添加时间'}
+                ,{field: 'status', title: '状态', sort: true,templet: '#status',align:'center'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align:'center'}
+            ]]
+            ,id: 'testReload'
+            ,page:true
+            ,limit:10
+        });
+        var $ = layui.$, active = {
+            reload: function() {
+                //执行重载
+                table.reload('testReload', {
+                    page: {curr: 1},
+                    where: {
+                        key: {
+                            adminname: $('#adminname').val(),
+                            roles: $('#roles').val(),
+                            isuse: $('#isuse').val(),
+                        }
+                    }
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function() {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //监听行工具事件
+        table.on('tool(role_list)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                WeAdminDel("{:url('del')}?adminid="+data.adminid);
+            } else if(obj.event === 'edit'){
+                WeAdminShow("编辑","{:url('edit')}?adminid="+data.adminid,'800','500');
+            }
+        });
+    });
+</script>

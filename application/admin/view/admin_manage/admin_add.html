@@ -1,0 +1,108 @@
+{include file='header'/}
+<body>
+<div class="weadmin-body">
+    <form class="layui-form" action="javascript:;" onsubmit="return dosub(this)">
+        <div class="layui-form-item">
+            <label for="adminname" class="layui-form-label">
+                <span class="we-red">*</span>登录名
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="adminname" name="adminname" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="password" class="layui-form-label">
+                <span class="we-red">*</span>密码
+            </label>
+            <div class="layui-input-block">
+                <input type="password" id="password" name="password" lay-verify="newPwd|required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="password2" class="layui-form-label">
+                <span class="we-red">*</span>确认密码
+            </label>
+            <div class="layui-input-block">
+                <input type="password" id="password2" name="password2" lay-verify="regpwd|required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="we-red">*</span>角色权限
+            </label>
+            <div class="layui-input-inline">
+                <select name="roleid" lay-verify="required">
+                    <option value="">==请选择==</option>
+                    {foreach $role_list as $v}
+                    <option value="{$v.roleid}">{$v.rolename}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="realname" class="layui-form-label">真实姓名</label>
+            <div class="layui-input-block">
+                <input type="text" id="realname" name="realname" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="email" class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" id="email" name="email" autocomplete="off" class="layui-input" lay-verify="email">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="status" class="layui-form-label">是否启用</label>
+            <div class="layui-input-block" id="status">
+                <input type="radio" name="status" value="1" title="启用" checked>
+                <input type="radio" name="status" value="0" title="禁用">
+            </div>
+        </div>
+        <input type="hidden" name="dosubmit" value="1">
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn"  lay-submit="" >确定</button>
+        </div>
+    </form>
+</div>
+</body>
+{include file='footer'/}
+<script>
+    layui.use(['form','upload', 'layer','element'], function(){
+        var form = layui.form
+            ,element = layui.element;
+        /*通用简单的表单验证*/
+        form.verify({
+            newPwd: [
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ],
+            regpwd:function (value) {
+                if($("#password").val()!=value){
+                    return "两次输入密码不一致，请重新输入！";
+                }
+            }
+        });
+    });
+    function dosub(obj) {
+        $.ajax({
+            type: 'POST',
+            url: '{:url('add')}',
+            data: $(obj).serialize(),
+            dataType: "json",
+            success: function (msg) {
+                if(msg.status == 1){
+                    layer.msg(msg.message, {
+                        icon: 1,
+                        time: 2000
+                    }, function(){
+                        parent.location.reload();
+                    });
+                }else{
+                    layer.msg(msg.message);
+                }
+            }
+        });
+        return false;
+    }
+</script>

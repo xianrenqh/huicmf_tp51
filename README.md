@@ -1,6 +1,5 @@
-![](https://box.kancloud.cn/5a0aaa69a5ff42657b5c4715f3d49221) 
 
-ThinkPHP 5.1（LTS版本） —— 12载初心，你值得信赖的PHP框架
+HuiCMF 2.0 —— 基于ThinkPHP5.1+Layui框架二次开发
 ===============
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/top-think/framework/badges/quality-score.png?b=5.1)](https://scrutinizer-ci.com/g/top-think/framework/?branch=5.1)
@@ -10,26 +9,23 @@ ThinkPHP 5.1（LTS版本） —— 12载初心，你值得信赖的PHP框架
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
 [![License](https://poser.pugx.org/topthink/framework/license)](https://packagist.org/packages/topthink/framework)
 
-ThinkPHP5.1对底层架构做了进一步的改进，减少依赖，其主要特性包括：
+HuiCMF 2.0其主要特性包括：
 
- + 采用容器统一管理对象
- + 支持Facade
- + 注解路由支持
- + 路由跨域请求支持
- + 配置和路由目录独立
- + 取消系统常量
- + 助手函数增强
- + 类库别名机制
- + 增加条件查询
- + 改进查询机制
- + 配置采用二级
- + 依赖注入完善
- + 支持`PSR-3`日志规范
- + 中间件支持（V5.1.6+）
- + Swoole/Workerman支持（V5.1.18+）
+ + 一键安装程序
+ + 后台登录模块
+ + 基本的权限管理模块
+ + 简单的内容管理模块
+ + 管理员管理模块
+ + 个人信息，密码修改模块
+ + 系统设置模块
+ + 自定义配置
+ + 后台菜单管理
+ + 后台操作（登录）日志
+ + 数据库备份还原
+ + 后台模块管理（支持自行开发安装卸载）
 
 
-> ThinkPHP5的运行环境要求PHP5.6以上。
+> HuiCMF的运行环境要求PHP7.0以上。
 
 ## 安装
 
@@ -39,29 +35,16 @@ ThinkPHP5.1对底层架构做了进一步的改进，减少依赖，其主要特
 composer create-project topthink/think tp
 ~~~
 
-启动服务
-
-~~~
-cd tp
-php think run
-~~~
-
 然后就可以在浏览器中访问
 
 ~~~
-http://localhost:8000
+http://你的域名
 ~~~
 
 更新框架
 ~~~
 composer update topthink/framework
 ~~~
-
-
-## 在线手册
-
-+ [完全开发手册](https://www.kancloud.cn/manual/thinkphp5_1/content)
-+ [升级指导](https://www.kancloud.cn/manual/thinkphp5_1/354155) 
 
 ## 目录结构
 
@@ -159,22 +142,26 @@ www  WEB部署目录（或者子目录）
 
 ### 数据表和字段
 
-*   数据表和字段采用小写加下划线方式命名，并注意字段名不要以下划线开头，例如 `think_user` 表和 `user_name`字段，不建议使用驼峰和中文作为数据表字段命名。
+*   数据表和字段采用小写加下划线方式命名，并注意字段名不要以下划线开头，例如 `hui_user` 表和 `cmf_name`字段，不建议使用驼峰和中文作为数据表字段命名。
 
-## 参与开发
 
-请参阅 [ThinkPHP5 核心框架包](https://github.com/top-think/framework)。
+## **特别鸣谢**
+
+感谢以下的项目,排名不分先后
+
+ThinkPHP：http://www.thinkphp.cn
+
+Layui：https://www.layui.com
+
+jQuery：http://jquery.com
 
 ## 版权信息
 
-ThinkPHP遵循Apache2开源协议发布，并提供免费使用。
+HuiCMF遵循Apache2开源协议发布，并提供免费使用。
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2006-2018 by ThinkPHP (http://thinkphp.cn)
+版权所有Copyright © 2019-2020 by 小灰灰
 
 All rights reserved。
 
-ThinkPHP® 商标和著作权所有者为上海顶想信息科技有限公司。
-
-更多细节参阅 [LICENSE.txt](LICENSE.txt)

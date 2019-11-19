@@ -1,0 +1,85 @@
+{include file='header'/}
+<style>
+	.layui-breadcrumb {visibility: visible;}
+</style>
+
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">管理员管理</a><span lay-separator="">/</span>
+            <a><cite>角色管理</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+
+<div class="weadmin-body">
+    <div class="weadmin-block">
+        <button class="layui-btn" onclick="WeAdminShow('添加角色','{:url('add')}','800','500')"><i class="layui-icon"></i>添加</button>
+        <span class="fr" style="line-height:40px">共有数据：<?php echo $total;?> 条</span>
+    </div>
+    <table id="role_list" lay-filter="role_list"></table>
+    <script type="text/html" id="disabled">
+        {{#  if(d.disabled ==0){ }}
+        <span class="layui-btn layui-btn-sm" onclick="change_s({{d.roleid}})">已启用</span>
+        {{#  } else { }}
+        <span class="layui-btn layui-btn-danger layui-btn-sm" onclick="change_s({{d.roleid}})">已禁用</span>
+        {{#  } }}
+    </script>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-sm {{#  if(d.roleid ==1){ }}layui-btn-disabled{{#  } }}" lay-event="quanxian">权限管理</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal {{#  if(d.roleid ==1){ }}layui-btn-disabled{{#  } }}" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-sm {{#  if(d.roleid ==1){ }}layui-btn-disabled{{#  } }}" lay-event="del">删除</a>
+    </script>
+
+</div>
+
+</body>
+
+{include file='footer' /}
+
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#role_list'
+            ,page: false
+            ,where:{do:1}
+            ,method: 'post'
+            ,url: '{:url('init')}' //数据接口
+            ,parseData: function(res){
+                //console.log(res)
+            }
+            ,cols: [[ //表头
+                {field: 'roleid', title: 'ID', width:100, sort: true, fixed: 'left',align:'center'}
+                ,{field: 'rolename', title: '角色名'}
+                ,{field: 'description', title: '描述'}
+                ,{field: 'disabled', title: '状态', sort: true,templet: '#disabled',align:'center'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align:'center'}
+            ]]
+        });
+        //监听行工具事件
+        table.on('tool(role_list)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                if(data.roleid!=1) {
+                    WeAdminDel("{:url('del')}?roleid="+data.roleid);
+                }
+            } else if(obj.event === 'edit'){
+                if(data.roleid!=1) {
+                    WeAdminShow("编辑", "{:url('edit')}?roleid=" + data.roleid, '800', '500');
+                }
+            }else if(obj.event ==='quanxian'){
+                if(data.roleid!=1){
+                    WeAdminShow("权限管理","{:url('role_priv')}?roleid="+data.roleid,'800');
+                }
+            }
+        });
+    });
+function change_s(roleid) {
+
+}
+</script>

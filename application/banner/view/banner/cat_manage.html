@@ -1,0 +1,55 @@
+{include file='../application/admin/view/header.html'/}
+<body>
+<div class="weadmin-body">
+    <div class="formdoby_normal">
+        <form method="post" action="" id="myform" onsubmit="return checkall(this)">
+            <button class="layui-btn layui-btn-danger" name="dosubmit" type="submit"> 批量删除</button>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <td>分类ID</td>
+                    <td>分类名称</td>
+                </tr>
+                </thead>
+                {foreach $data as $val}
+                <tr>
+                    <td><input type="checkbox" value="{$val.tid}" name="id[]"> {$val.tid}</td>
+                    <td>{$val.name}</td>
+                </tr>
+                {/foreach}
+            </table>
+        </form>
+    </div>
+</div>
+{include file='../application/admin/view/footer.html'/}
+<script type="text/javascript">
+
+    function checkall(obj) {
+        if ($("input[name='id[]']:checked").length < 1) {
+            layer.alert('请勾选信息！');
+            return false;
+        }
+
+        layer.confirm('确认要删除吗？', function (index) {
+            $.ajax({
+                type: 'POST',
+                url: '{:url('cat_manage')}',
+                data: $(obj).serialize(),
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        parent.location.reload();
+                    } else {
+                        layer.msg(msg.message);
+                    }
+                }
+            })
+        });
+
+
+        return false;
+
+    }
+</script>
+</body>
+</html>

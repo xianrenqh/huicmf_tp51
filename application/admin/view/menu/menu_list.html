@@ -1,0 +1,40 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+    .layui-table tr td input{width: 40px;text-align: center}
+</style>
+<body>
+
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">系统管理</a><span lay-separator="">/</span>
+            <a><cite>后台菜单管理</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="page-container">
+    <form action="{:url('order')}" method="post">
+        <table class="layui-table">
+            <thead>
+            <tr class="text-c">
+                <th width="50">排序</th>
+                <th width="50">菜单ID</th>
+                <th class="text-l">菜单名称</th>
+                <th width="60">状态</th>
+                <th width="155">管理操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php echo $menus;?>
+            </tbody>
+        </table>
+        <div class="layui-form-item readonly-bg">
+            <input class="layui-btn" name="dosubmit" value="排序" type="submit" style="margin-left: 16px;margin-top: 10px; margin-bottom: 10px;">
+        </div>
+    </form>
+</div>
+{include file='footer'/}
+</body>
+</html>

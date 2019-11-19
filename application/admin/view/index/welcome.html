@@ -1,0 +1,82 @@
+{include file='header'/}
+<body>
+<div class="weadmin-body">
+    <blockquote class="layui-elem-quote">欢迎使用 小灰灰内容管理系统 <span class="f-14">v2.0</span>！</blockquote>
+    <p>上次登录IP：{$getinfo.loginip} 上次登录时间：{$getinfo.logintime|date='Y-m-d H:i:s'}
+        [ <a data-title="登录日志"   onclick="WeAdminShow('后台登录日志','{:url('admin_log/admin_login_log_list')}','1000','680')" href="javascript:void(0)">登录日志</a> ]
+    </p>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-lg12">
+            <table class="layui-table">
+                <thead>
+                <tr class="layui-bg-green">
+                    <th colspan="2" scope="col">系统信息</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td width="30%">WEB服务器</td>
+                    <td><span id="lbServerName"><?php echo $_SERVER['SERVER_SOFTWARE'];?></span></td>
+                </tr>
+                <tr>
+                    <td>PHP版本</td>
+                    <td>{$Think.PHP_VERSION}<?php echo PHP_VERSION;?></td>
+                </tr>
+                <tr>
+                    <td>MySQL版本</td>
+                    <td>{$sqlversion}</td>
+                </tr>
+                <tr>
+                    <td>服务器操作系统 </td>
+                    <td><?php echo php_uname('s');?></td>
+                </tr>
+                <tr>
+                    <td>ThinkPHP框架版本 </td>
+                    <td>{$Think.version}</td>
+                </tr>
+                <tr>
+                    <td>最大上传限制（UPLOAD_MAX_FILESIZE） </td>
+                    <td><?php echo ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'Disabled';?></td>
+                </tr>
+                <tr>
+                    <td>最大执行时间（MAX_EXECUTION_TIME）</td>
+                    <td><?php echo ini_get('max_execution_time').'秒';?></td>
+                </tr>
+                <tr>
+                    <td>服务器时间 </td>
+                    <td><span id="show_date"></span></td>
+                </tr>
+                <tr>
+                    <td>服务器域名 </td>
+                    <td><?php echo $_SERVER['HTTP_HOST'];?></td>
+                </tr>
+                <tr>
+                    <td>服务器端口 </td>
+                    <td><?php echo $_SERVER['SERVER_PORT'];?></td>
+                </tr>
+                <tr>
+                    <td>脚本运行占用最大内存 </td>
+                    <td><?php echo get_cfg_var('memory_limit') ? get_cfg_var('memory_limit') : '---';?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{include file='footer'/}
+<script type="text/javascript">
+    var ts = <?php echo round(microtime(true)*1000);?>;
+    function getTime(){
+        var t = new Date(ts);
+        with(t){
+            var _time = ""+getFullYear() + "年" + (getMonth()+1)+"月"+getDate()+"日 " + (getHours()<10 ? "0" :"") + getHours() + ":" + (getMinutes()<10 ? "0" :"") + getMinutes() + ":" + (getSeconds()<10 ? "0" :"") + getSeconds();
+        }
+        document.getElementById("show_date").innerHTML = _time;
+        setTimeout("getTime()", 1000);
+        ts += 1000;
+    }
+    getTime();
+</script>
+</body>
+</html>

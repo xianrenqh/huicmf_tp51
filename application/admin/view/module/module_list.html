@@ -1,0 +1,77 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+</style>
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">系统管理</a><span lay-separator="">/</span>
+            <a><cite>模块管理</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+    <div class="layui-row demoTable" style="margin: 5px auto 15px">
+        <table class="layui-table">
+            <thead>
+            <tr class="text-c">
+                <th>模块名称</th>
+                <th>模块目录</th>
+                <th>版本号</th>
+                <th>安装时间</th>
+                <th>更新时间</th>
+                <th>管理操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+		foreach($directory as $d){
+			if (array_key_exists($d, $modules)) {
+		?>
+            <tr class="text-c">
+                <td><?php echo $modules[$d]['name']?></td>
+                <td><?php echo $d?></td>
+                <td><?php echo $modules[$d]['version']?></td>
+                <td><?php echo $modules[$d]['installdate']?></td>
+                <td><?php echo $modules[$d]['updatedate']?></td>
+                <td><?php if ($modules[$d]['iscore']) {?><span style="color:#999">禁止</span><?php } else {?><span><a href="javascript:void(0);" onclick="uninstall('<?php echo $d?>','{:url('uninstall',['module'=>$d])}')" style="color:red">卸载</a></span><?php }?></td>
+            </tr>
+            <?php
+			}else{
+				if(is_file(APP_PATH.$d.DIRECTORY_SEPARATOR.'install'.DIRECTORY_SEPARATOR.'config.inc.php')) {
+					$isinstall = true;
+				}else{
+					$isinstall = false;
+				}
+			?>
+            <tr class="text-c">
+                <td></td>
+                <td><?php echo $d?></td>
+                <td>未知</td>
+                <td>未安装</td>
+                <td>未安装</td>
+                <td><?php if($isinstall){?> <span><a href="javascript:void(0);" onclick="WeAdminShow('模块安装','{:url('install',['module'=>$d])}','600','450')" style="color:#009933">安装</a></span><?php } else {?><span style="color:#009933">无法安装</span><?php }?></a></td>
+            </tr>
+            <?php
+			}
+		}
+		?>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{include file='footer'/}
+<script>
+    function uninstall(m, url){
+        layer.confirm('确认要卸载 '+m+' 模块吗？',function(index){
+            window.location.href = url;
+        });
+    }
+</script>
+</script>
+</body>
+</html>

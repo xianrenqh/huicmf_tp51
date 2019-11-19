@@ -1,0 +1,102 @@
+{include file='../application/admin/view/header.html'/}
+
+<body>
+<div class="weadmin-body">
+	<form class="layui-form" action="javascript:;" onsubmit="return dosub(this)" method="post">
+		<div class="layui-form-item">
+			<label class="layui-form-label">轮播分类</label>
+			<div class="layui-input-inline">
+				<select  name="typeid" style="width:230px;" id="typeid">
+					<option value="0">无分类</option>
+					{foreach $types as $v}
+					<option value="{$v.tid}">{$v.name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="layui-form-mid layui-word-aux">
+				<a href="javascript:;" onclick="WeAdminShow('添加分类','{:url('cat_add')}','650','400')" class="ml-5">添加</a> |
+				<a href="javascript:;" onclick="WeAdminShow('管理分类','{:url('cat_manage')}','650','500')">管理</a>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">
+				<span class="we-red">*</span>标题名称
+			</label>
+			<div class="layui-input-block">
+				<input type="text" id="title" name="title" value="" lay-verify="required" autocomplete="off" class="layui-input" >
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">链接地址</label>
+			<div class="layui-input-block">
+				<input type="text" id="url" name="url" value="" autocomplete="off" class="layui-input" >
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">图片地址</label>
+			{$form_image|raw}
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">排序</label>
+			<div class="layui-input-inline">
+				<input type="text" id="listorder" name="listorder" value="" autocomplete="off" class="layui-input" >
+			</div>
+			<div class="layui-form-mid layui-word-aux">[从小到大排列]</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label for="status" class="layui-form-label">是否启用</label>
+			<div class="layui-input-block" id="status">
+				<input type="radio" name="status" value="1" title="启用" checked >
+				<input type="radio" name="status" value="0" title="禁用" >
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label"></label>
+			<input type="hidden" name="dosubmit" value="1">
+			<button class="layui-btn"  lay-submit=""type="submit"    name="dosubmit">确定</button>
+		</div>
+	</form>
+</div>
+
+{include file='../application/admin/view/footer.html'/}
+
+<script>
+	function dosub(obj) {
+		if($("input[name='title']").val()==''){
+			layer.msg('标题名称不能为空！');
+			return false;
+		}
+		if($("input[name='url']").val()=='http://' || $("input[name='url']").val()==''){
+			layer.msg('链接地址不能为空！');
+			return false;
+		}
+		if($("input[name='image']").val()==''){
+			layer.msg('请上传轮播图！');
+			return false;
+		}
+		$.ajax({
+			type: 'POST',
+			url: '{:url('add')}',
+			data: $(obj).serialize(),
+			dataType: "json",
+			success: function (msg) {
+				if(msg.status == 1){
+					layer.msg(msg.message, {
+						icon: 1,
+						time: 2000
+					}, function(){
+						parent.location.reload();
+					});
+				}else{
+					layer.msg(msg.message);
+				}
+			}
+		});
+		return false;
+	}
+</script>
+</body>
+</html>

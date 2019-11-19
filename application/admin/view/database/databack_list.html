@@ -1,0 +1,64 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+</style>
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">数据管理</a><span lay-separator="">/</span>
+            <a><cite>数据还原</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+
+<div class="weadmin-body">
+{if ($roleid==1)}
+    <blockquote class="layui-elem-quote site-text">
+        说明：数据备份文件保存于“/databack/”目录
+    </blockquote>
+{/if}
+    <table class="layui-table">
+        <thead>
+        <tr class="text-c">
+            <th>文件名称</th>
+            <th>文件大小</th>
+            <th>备份时间</th>
+            <th>卷号</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+			   foreach($data as $val){
+			 ?>
+        <tr class="text-c">
+            <td><?php echo $val['filename'];?></td>
+            <td><?php echo $val['filesize'];?></td>
+            <td><?php echo $val['backtime'];?></td>
+            <td><?php echo $val['part'];?></td>
+            <td class="td-manage" align="center" style="width: 200px">
+                <a title="还原" href="javascript:;" onclick="databack_import('{:url('import',['time'=>$val['time']])}')" class="layui-btn layui-btn-sm layui-btn-normal" style="text-decoration:none">还原</a>
+                <a title="下载" href="{:url('databack_down',['filename'=>$val['filename'],'time'=>$val['time']])}" class="layui-btn layui-btn-sm" style="text-decoration:none">下载</a>
+                <a title="删除" href="javascript:;" onclick="WeAdminDel('{:url('databack_del',['time'=>$val['time']])}')" class="layui-btn layui-btn-sm layui-btn-danger" style="text-decoration:none">删除</a></td>
+        </tr>
+        <?php
+			   }
+			?>
+        </tbody>
+    </table>
+</div>
+
+{include file='footer'/}
+
+<script>
+    function databack_import(url) {
+        layer.confirm('确定要还原数据吗？',function(index){
+            window.location.href = url;
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+</style>
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">数据管理</a><span lay-separator="">/</span>
+            <a><cite>数据备份</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+
+    <div class="page-container">
+        <form method="post" name="myform" id="myform" action="{:url('export_list')}">
+            <div class="weadmin-block demoTable">
+                <a class="layui-btn layui-btn-normal"  data-type="beifenData">立即备份</a>
+                <a class="layui-btn"  data-type="youhuaData">优化表</a>
+                <a class="layui-btn layui-btn-danger" data-type="xiufuData">修复表</a>
+                <span class="fr" style="line-height:40px;padding-right: 10px;">共有数据：<span  id="total"></span> 条</span>
+            </div>
+            <div class="layui-btn-group demoTable">
+            </div>
+            <table id="database_list" lay-filter="database_list"></table>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-sm" lay-event="youhua">优化</a>
+                <a class="layui-btn layui-btn-danger layui-btn-sm" lay-event="xiufu">修复</a>
+                <a class="layui-btn layui-btn-normal layui-btn-sm" lay-event="jiegou">结构</a>
+            </script>
+        </form>
+    </div>
+</div>
+
+{include file='footer'/}
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#database_list'
+            ,page: false
+            ,method: 'get'
+            ,url: '{:url('init',['do'=>1])}' //数据接口
+            ,done: function(res){ //res 即为原始返回的数据
+                $("#total").html(res.count);
+            }
+            ,cols: [[ //表头
+                {type:'checkbox',LAY_CHECKED:true}
+                ,{field: 'name', title: '表名'}
+                ,{field: 'engine', title: '类型'}
+                ,{field: 'collation', title: '编码'}
+                ,{field: 'rows', title: '数据量',width:120}
+                ,{field: 'data_length', title: '数据大小'}
+                ,{field: 'create_time', title: '创建时间'}
+                ,{field: 'data_free', title: '碎片'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo',align:'center'}
+            ]]
+            ,id:'idTest'
+            ,page:false
+            ,limit:10000
+        });
+        //监听行工具事件
+        table.on('tool(database_list)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'youhua'){
+                getevent("{:url('public_optimize')}",data);
+            } else if(obj.event === 'xiufu'){
+                getevent("{:url('public_repair')}",data);
+            }else if(obj.event === 'jiegou'){
+                WeAdminShow("查看表结构","{:url('public_datatable_structure')}?table="+data.name,'800','550');
+            }
+        });
+
+        var $ = layui.$, active = {
+            youhuaData: function(){ //优化表数据
+                $.post("{:url('public_optimize')}",{
+                    tables:getToolName(table)
+                },function (res) {
+                    layer.msg(res.message,{
+                        icon:res.icon
+                    })
+                })
+
+            }
+            ,xiufuData: function(){ //修复表数据
+                $.post("{:url('public_repair')}",{
+                    tables:getToolName(table)
+                },function (res) {
+                    layer.msg(res.message,{
+                        icon:res.icon
+                    })
+                })
+            }
+            ,beifenData: function(){ //立即备份
+                $.post("{:url('export_list')}", {
+                    dosubmit:1,
+                    tables:getToolName(table)
+                }, function(str){
+                    layer.msg(str.message);
+                    if(str.start==1){
+                        layer.msg(str.message,{time:1000},function () {
+                            WeAdminShow("数据还原",str.href,'850','550');
+                        })
+                    }
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+    function getevent(url,data) {
+        $.get(url,{
+            tables:data.name
+        },function (res) {
+            layer.msg(res.message,{
+                icon:res.icon
+            })
+        })
+    }
+    function getToolName(table) {
+        var checkStatus = table.checkStatus('idTest');
+        var datas = checkStatus.data;
+        var Namestr='';
+        for (var i = 0; i < datas.length; i++) {
+            Namestr += datas[i].name + ',';
+        }
+        Namestr = Namestr.substr(0, Namestr.length-1);
+        var arr =Namestr.split(',');
+        for(var i in arr){
+            (arr[i])
+        }
+        return arr
+    }
+</script>
+</body>
+</html>

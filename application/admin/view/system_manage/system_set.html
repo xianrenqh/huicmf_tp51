@@ -1,0 +1,259 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+    input[type='checkbox']{display: none;}
+    .vtype li{float:left;margin-right: 10px;}
+    .vtype .active{ background: #FF5722}
+    .clearfix{clear: both}
+    .layui-form-label{width: 12%;}
+    .layui-tab-title li{ background: #e8e8e8;color:#000;border-right:1px solid #fff;}
+    .layui-tab-title .layui-this{background: #222;color:#fff;padding: 2px 15px 0;}
+</style>
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">系统配置</a><span lay-separator="">/</span>
+            <a><cite>系统设置</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+    <form class="layui-form" action="javascript:;" onsubmit="return dosub(this)">
+        <div class="layui-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">基本设置</li>
+                <li>安全设置</li>
+                <li>邮件设置</li>
+                <li>附件设置</li>
+            </ul>
+            <div class="layui-tab-content" style="margin-top: 20px;">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form-item " >
+                        <label for="site_name" class="layui-form-label">
+                            <span class="we-red">*</span>站点名称：
+                        </label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="site_name" name="site_name" value="{$data.site_name}" lay-verify="required"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="site_url" class="layui-form-label">
+                            <span class="we-red">*</span>站点根网址：
+                        </label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="site_url" name="site_url" value="{$data.site_url}"  lay-verify="required|siteUrl"  autocomplete="off" class="layui-input" placeholder="形式例如：http://www.baidu.com/">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="site_keyword" class="layui-form-label">网站关键词：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="site_keyword" name="site_keyword" value="{$data.site_keyword}"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="site_copyright" class="layui-form-label">网站版权信息：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="site_copyright" name="site_copyright" value="{$data.site_copyright}"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="site_beian" class="layui-form-label">网站备案号：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="site_beian" name="site_beian" value="{$data.site_beian}"  autocomplete="off" class="layui-input" placeholder="例如：京ICP备666666号">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="site_description" class="layui-form-label">网站描述：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <textarea placeholder="网站描述" class="layui-textarea" id="site_description" name="site_description">{$data.site_description}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="site_code" class="layui-form-label">统计代码：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <textarea placeholder="统计代码" class="layui-textarea" id="site_code" name="site_code">{$data.site_code}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item " >
+                        <label class="layui-form-label">禁止登录后台的IP列表：<br><span style="color:#888">匹配IP段用“*”占位<br>多个IP用“,”分割</span></label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <textarea class="layui-textarea" name="admin_prohibit_ip" placeholder="匹配IP段用“*”占位，如192.168.*.*，多个IP地址请用英文逗号“,”分割">{$data.admin_prohibit_ip}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label  class="layui-form-label">启用后台管理操作日志</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="admin_log" value="1" title="启用" {if ($data.admin_log==1)}checked{/if}>
+                            <input type="radio" name="admin_log" value="0" title="禁用" {if ($data.admin_log==0)}checked{/if}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label  class="layui-form-label">后台登录验证码</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="login_code" value="1" title="字母验证码" {if ($data.login_code==1)}checked{/if}>
+                            <input type="radio" name="login_code" value="2" title="点击验证码" {if ($data.login_code==2)}checked{/if}>
+                            <input type="radio" name="login_code" value="0" title="关闭" {if ($data.login_code==0)}checked{/if}>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item " >
+                        <label for="mail_server" class="layui-form-label">SMTP服务器：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="mail_server" name="mail_server" value="{$data.mail_server}"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="mail_port" class="layui-form-label">SMTP端口号：</label>
+                        <div class="layui-input-inline" >
+                            <input type="text" id="mail_port" name="mail_port" value="{$data.mail_port}"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="mail_from" class="layui-form-label">发件人地址：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="mail_from" name="mail_from" value="{$data.mail_from}"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="mail_user" class="layui-form-label">验证用户名：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="mail_user" name="mail_user" value="{$data.mail_user}"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="mail_pass" class="layui-form-label">验证密码：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="mail_pass" name="mail_pass" value="{$data.mail_pass}"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="mail_inbox" class="layui-form-label">站点默认邮箱：</label>
+                        <div class="layui-input-inline" style="width: 80%">
+                            <input type="text" id="mail_inbox" name="mail_inbox" value="{$data.mail_inbox}"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="mail_inbox" class="layui-form-label">邮件设置测试：</label>
+                        <div class="layui-input-inline" style="width: 50%">
+                            <input type="email" id="mail_to" name="mail_to" value=""  autocomplete="off" class="layui-input" placeholder="发送邮件测试地址" >
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">
+                            <a class="layui-btn layui-btn-normal" href="javascript:;" onclick="isEmail(this.value)">测试发送</a> [先保存，在发送]
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item " >
+                        <label for="mail_port" class="layui-form-label">允许上传附件大小（KB）：</label>
+                        <div class="layui-input-inline" >
+                            <input type="text" id="upload_maxsize" name="upload_maxsize" value="<?php echo $data['upload_maxsize']?>"  autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-input-inline" style="width: 50%" >[最大限制不能超过服务器“upload_max_filesize”配置]</div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="mail_port" class="layui-form-label">允许上传附件类型：</label>
+                        <div class="layui-input-inline" >
+                            <input type="text" id="upload_types" name="upload_types" value="<?php echo $data['upload_types']?>"  autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-input-inline" style="width: 50%" >[多个类型直接用“|”分开]</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label  class="layui-form-label">是否开启图片水印：</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="watermark_enable" value="1" title="开启" {if ($data.watermark_enable==1)}checked{/if}>
+                            <input type="radio" name="watermark_enable" value="0" title="关闭" {if ($data.watermark_enable==0)}checked{/if}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item " >
+                        <label for="mail_port" class="layui-form-label">水印图片名称：</label>
+                        <div class="layui-input-inline" >
+                            <input type="text" id="watermark_name" name="watermark_name" value="<?php echo $data['watermark_name']?>"  autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-input-inline" style="width: 50%" > [水印存放路径:/common/data/water]</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label  class="layui-form-label">水印的位置：</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="watermark_position" value="0" title="随机" {if ($data.watermark_position==0)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="1" title="顶部居左" {if ($data.watermark_position==1)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="2" title="顶部居中" {if ($data.watermark_position==2)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="3" title="顶部居右" {if ($data.watermark_position==3)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="4" title="中部居左" {if ($data.watermark_position==4)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="5" title="中部居中" {if ($data.watermark_position==5)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="6" title="中部居右" {if ($data.watermark_position==6)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="7" title="顶部居左" {if ($data.watermark_position==7)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="8" title="底部居中" {if ($data.watermark_position==8)}checked{/if}>
+                            <input type="radio" name="watermark_position" value="9" title="底部居右" {if ($data.watermark_position==9)}checked{/if}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item " >
+                <label class="layui-form-label"></label>
+                <div class="layui-input-inline" style="width: 80%">
+                    <input type="hidden" name="dosubmit" value="1">
+                    <input class="layui-btn" type="submit" value="立即保存" lay-submit="" >
+                </div>
+            </div>
+    </form>
+</div>
+{include file='footer'/}
+<script>
+    layui.use(['form','element'], function(){
+        var $ = layui.jquery
+            ,form = layui.form
+            ,element = layui.element;
+        form.verify({
+            siteUrl:[
+                /^http(.+)\/$/
+                ,'站点根网址格式为：http://xiaohuihui.net.cn/，请以“/”结尾！'
+            ]
+        });
+    });
+
+    //保存
+    function dosub(obj) {
+        $.ajax({
+            type: 'POST',
+            url: '{:url('save')}',
+            data: $(obj).serialize(),
+            dataType: "json",
+            success: function (msg) {
+                if(msg.status == 1){
+                    layer.msg(msg.message, {
+                        icon: 1,
+                        time: 2000
+                    }, function(){
+                        parent.location.reload();
+                    });
+                }else{
+                    layer.msg(msg.message);
+                }
+            }
+        });
+        return false;
+    }
+    //测试邮件发送
+    function isEmail() {
+        var mail_to = $("#mail_to").val();
+        var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+        if(!myreg.test(mail_to))
+        {
+            layer.msg('发送邮件地址不能为空');
+            return false;
+        }else{
+            $.post("{:url('public_mail_test')}"
+                ,{mail_to:mail_to}
+                ,function (res) {
+                    layer.msg(res.msg, {icon: res.icon});
+                })
+        }
+    }
+</script>
+</body>
+</html>

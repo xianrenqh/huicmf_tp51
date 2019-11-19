@@ -1,0 +1,134 @@
+{include file='header'/}
+<body>
+<div class="weadmin-body">
+    <form class="layui-form" action="javascript:;" method="post" onsubmit="return dosub(this)">
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">
+                <span class="we-red">*</span>上级菜单
+            </label>
+            <div class="layui-input-block">
+                <select name="parentid">
+                    <option value="0">一级菜单</option>
+                    <?php echo $select_menus;?>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="name" class="layui-form-label">
+                <span class="we-red">*</span>菜单名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="name" name="name" value="" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="m" class="layui-form-label">
+                <span class="we-red">*</span>模块名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="m" name="m" value="" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="c" class="layui-form-label">
+                <span class="we-red">*</span>类名
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="c" name="c" value="" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="a" class="layui-form-label">
+                <span class="we-red">*</span>方法名
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="a" name="a" value="" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="data" class="layui-form-label">附加参数</label>
+            <div class="layui-input-block">
+                <span class="span_input" id="config_show">
+                    <div class="layui-input-inline" style="width: 65%">
+                        <input type="text" name="data" value="" id="data" autocomplete="off" class="layui-input" placeholder="为一级菜单时，填写图标字体，子菜单时填写如：id=1&cid=2">
+                    </div>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" id="checkicon" onclick="fopen('选择图标','{:url('index/public_checkicon')}','800','500');"><i class="layui-icon"></i>选择图标</button>
+                    </div>
+                </span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="status" class="layui-form-label">是否显示</label>
+            <div class="layui-input-block" id="status">
+                <input type="radio" name="display" value="1" title="显示" checked>
+                <input type="radio" name="display" value="0" title="隐藏">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="listorder" class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input type="text" id="listorder" name="listorder" value="0" placeholder="数字越小越靠前，默认为0"  autocomplete="off" class="layui-input" lay-verify="number">
+            </div>
+        </div>
+        <input type="hidden" name="dosubmit" value="1">
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn"  lay-submit="" >确定</button>
+        </div>
+    </form>
+</div>
+
+{include file='footer'/}
+<script>
+    function fopen(title, url, w, h) {
+        layer.open({
+            type: 2,
+            area: [w + 'px', h + 'px'],
+            fix: false, //不固定
+            maxmin: true,
+            shadeClose: true,
+            shade: 0.4,
+            title: title,
+            content: url,
+            end: function () {
+                var iconname = $.cookie('menu_icon_name1');
+                $("#data").val(iconname);
+            }
+        });
+    }
+    function dosub(obj){
+        layui.use(['form','upload', 'layer','element'], function() {
+            var form = layui.form
+                , element = layui.element;
+            /*通用简单的表单验证*/
+            form.verify({
+                isChinese: [
+                    /^[A-Za-z\u4e00-\u9fa5]+$/
+                    , '只能输入汉字或字母'
+                ]
+            });
+        });
+        $.ajax({
+            type: 'POST',
+            url: '{:url('add')}',
+            data: $(obj).serialize(),
+            dataType: "json",
+            success: function (msg) {
+                if(msg.status == 1){
+                    layer.msg(msg.message, {
+                        icon: 1,
+                        time: 2000
+                    }, function(){
+                        parent.location.reload();
+                    });
+                }else{
+                    layer.msg(msg.message);
+                }
+            }
+        })
+        return false;
+    }
+</script>
+</body>
+</html>

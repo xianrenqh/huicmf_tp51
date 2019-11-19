@@ -1,0 +1,49 @@
+{include file='header'/}
+<style>
+    .layui-form-label{width: 90px;}
+    .layui-input-block{margin-left: 120px;}
+</style>
+<body>
+<div class="weadmin-body">
+    <form method="post" class="layui-form" action="{:url('public_edit_info')}">
+        <div class="layui-form-item">
+            <label for="adminname" class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" id="adminname" name="adminname"  value="{$data.adminname}" class="layui-input readonly-bg" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="rolename" class="layui-form-label">所属角色</label>
+            <div class="layui-input-block">
+                <input type="text" id="rolename" name="rolename"  value="{$data.rolename}" class="layui-input readonly-bg" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="loginip" class="layui-form-label">最后登录IP</label>
+            <div class="layui-input-block">
+                <input type="text" id="loginip" name="loginip"  value="{$data.loginip}" class="layui-input readonly-bg" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="logintime" class="layui-form-label">最后登录时间</label>
+            <div class="layui-input-block">
+                <input type="text" id="logintime" name="logintime"  value="{$data.logintime}" class="layui-input readonly-bg" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="email" class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" id="email" name="email"  value="{$data.email}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label"></label>
+            <input type="hidden" name="adminid" value="{$data.adminid}">
+            <button class="layui-btn" name="dosubmit" value="1"  lay-submit="">确定</button>
+        </div>
+    </form>
+</div>
+
+{include file='footer'/}
+</body>
+</html>

@@ -1,0 +1,80 @@
+{include file='header' /}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+    .vtype li{float:left;margin-right: 10px;}
+    .vtype .active{ background: #FF5722}
+    .clearfix{clear: both}
+    .layui-form-label{width: 12%;}
+    .layui-tab-title li{ background: #e8e8e8;color:#000;border-right:1px solid #fff;}
+    .layui-tab-title .layui-this{background: #222;color:#fff;padding: 2px 15px 0;}
+    .layui-breadcrumb {visibility: visible;}
+    .layui-table .text-c th, .layui-table .text-c td {text-align: center;}
+</style>
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">系统配置</a><span lay-separator="">/</span>
+            <a><cite>自定义配置</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+    <blockquote class="layui-elem-quote">
+        自定义配置：用户可以根据需要自己添加配置，所添加的配置信息与系统配置信息等效，如添加的配置名为“qq”，则前台调用方法为{literal}{$site[qq]}{/literal}。
+    </blockquote>
+    <div class="layui-row demoTable" style="margin: 15px auto 15px">
+        <div class="weadmin-block">
+            <button class="layui-btn layui-btn-danger" onclick="hui_dels('id')"><i class="layui-icon layui-icon-delete"></i>批量删除</button>
+            <button class="layui-btn" onclick="WeAdminShow('添加自定义配置','{:url('user_config_add')}','800','550')"><i class="layui-icon"></i>添加</button>
+            <span class="fr" style="line-height:40px;padding-right: 10px;">共有数据：<span  id="total"><?php echo $total;?></span> 条</span>
+        </div>
+        <form method="post" action="{:url('user_config_del')}" id="myform">
+            <table class="layui-table" align="center">
+                <thead>
+                <tr class="text-c">
+                    <th width="25"><input type="checkbox" lay-skin="primary"></th>
+                    <th>配置名称</th>
+                    <th>配置类型</th>
+                    <th>配置值</th>
+                    <th>简洁说明</th>
+                    <th>状态</th>
+                    <th width="120">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+		foreach($data as $val){
+		?>
+                <tr class="text-c">
+                    <td><input type="checkbox" value="<?php echo $val['id']?>" name="id[]" lay-skin="primary"></td>
+                    <td><?php echo $val['name']?></td>
+                    <td><?php echo $val['fieldtype']?></td>
+                    <td><?php echo str_cut(htmlspecialchars($val['value']),80); ?></td>
+                    <td><?php echo htmlspecialchars($val['title'])?></td>
+                    <td><?php echo !$val['status'] ? '<span class="label radius">已禁用</span>' : '<span class="label label-success radius">已启用</span>';?></td>
+                    <td  style="text-align: center">
+                        <a class="layui-btn layui-btn-sm layui-btn-normal"onclick="WeAdminShow ('配置编辑','{:url('user_config_edit',['id'=>$val['id']])}','800','500')" href="javascript:;" title="编辑">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-sm" onclick="WeAdminDel('{:url('user_config_del_one',['id'=>$val['id']])}')">删除</a>
+                    </td>
+                </tr>
+                <?php
+		}
+		?>
+                </tbody>
+            </table>
+        </form>
+        <div class="mws-panel-content">
+            <div class="list-page">
+                {$data->render()|raw}
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+{include file='footer'/}
+</body>
+</html>

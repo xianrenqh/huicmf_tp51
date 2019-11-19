@@ -1,0 +1,2 @@
+<?php defined('IN_HuiCMF') or exit('No Define HuiCMF.'); ?>
+<div class="footer"> &copy; 2019-2020 Powered By <a href="https://xiaohuihui.net.cn/" target="_blank">xiaohuihui.net.cn</a> HuiCMF内容管理系统 v2.0 </div>

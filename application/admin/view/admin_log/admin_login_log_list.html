@@ -1,0 +1,61 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+</style>
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">系统管理</a><span lay-separator="">/</span>
+            <a><cite>后台登录日志</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+    <div class="layui-row demoTable" style="margin: 5px auto 15px">
+        <div class="weadmin-block">
+            <button class="layui-btn layui-btn-danger" onclick="WeAdminDel('{:url(\'admin_log/del_login_log\',[\'dosubmit\'=>1])}')"><i class="layui-icon layui-icon-delete"></i>删除一个月之前的数据</button>
+            <span class="fr" style="line-height:40px;padding-right: 10px;">共有数据：<span  id="total"><?php echo $total;?></span> 条</span>
+        </div>
+        <table class="layui-table">
+            <thead>
+            <tr class="text-c">
+                <th>ID</th>
+                <th>用户名</th>
+                <th>登录结果</th>
+                <th>类型</th>
+                <th>登录密码</th>
+                <th>登录时间</th>
+                <th>登录IP</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+		foreach($data as $val){
+		?>
+            <tr class="text-c">
+                <td><?php echo $val['id']; ?></td>
+                <td><?php echo htmlspecialchars($val['adminname']); ?></td>
+                <td><?php echo $val['loginresult'] ? '登录成功' : '<span style="color:red;">登录失败</span>'; ?></td>
+                <td><?php echo $val['cause']; ?></td>
+                <td><?php echo htmlspecialchars($val['password']); ?></td>
+                <td><?php echo date('Y-m-d H:i:s', $val['logintime']); ?></td>
+                <td><?php echo $val['loginip']; ?></td>
+            </tr>
+            <?php
+		}
+		?>
+            </tbody>
+        </table>
+
+        <div class="mws-panel-content">
+            <div class="list-page">
+                {$data->render()|raw}
+            </div>
+        </div>
+    </div>
+
+   {include file='footer'/}
+</body>
+</html>

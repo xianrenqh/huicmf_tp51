@@ -1,0 +1,22 @@
+<!-- 底部结束 -->
+<script type="text/javascript" src="__LIB__jquery/jquery.2.2.4.min.js"></script>
+<script type="text/javascript" src="__LIB__layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="__LIB__jquery/jquery.cookie.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: '__STATIC_ADMIN__js/'
+        ,version: '101100'
+    }).extend({ //设定模块别名
+        admin: 'admin'
+        ,menu: 'menu'
+    });
+    layui.use(['jquery', 'admin', 'menu'], function(){
+        var $ = layui.jquery,
+            admin = layui.admin,
+            menu = layui.menu;
+        $(function(){
+            menu.getMenu("{:url('index/public_showmenu')}");
+        });
+    });
+
+</script>

@@ -1,0 +1,49 @@
+{include file='../application/admin/view/header.html'/}
+<body>
+<div class="weadmin-body">
+	<form class="layui-form" action="javascript:;" onsubmit="return checkall(this)">
+		<div class="layui-form-item">
+			<label class="layui-form-label">
+				<span class="we-red">*</span>分类名称
+			</label>
+			<div class="layui-input-block">
+				<input type="text" id="name" name="name" value="" lay-verify="required" autocomplete="off" class="layui-input" >
+			</div>
+		</div>
+		<input type="hidden" name="dosubmit" value="1">
+		<div class="layui-form-item">
+			<label class="layui-form-label"></label>
+			<button class="layui-btn"  lay-submit="" >提交</button>
+		</div>
+	</form>
+</div>
+
+{include file='../application/admin/view/footer.html'/}
+<script type="text/javascript">
+function checkall(obj){
+		if($("input[name='name']").val()==''){
+			layer.msg('分类名称不能为空！');
+			return false;
+		}
+        $.ajax({
+            type: 'POST',
+            url: '{:url('cat_add')}',
+            data: $(obj).serialize(),
+		    dataType: "json", 
+            success: function (msg) {
+				if(msg.status == 1){
+					layer.msg(msg.message,function () {
+						parent.layer.close(parent.layer.getFrameIndex(window.name));
+						window.parent.location.reload();
+					});
+			    }else{
+					layer.msg(msg.message);
+				}
+            }
+        })		 
+		return false;
+
+}
+</script>
+</body>
+</html>

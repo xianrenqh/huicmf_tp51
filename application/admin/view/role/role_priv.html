@@ -1,0 +1,73 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+</style>
+<body>
+
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">角色管理</a><span lay-separator="">/</span>
+            <a><cite>权限管理</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="page-container" style="margin-top: 15px;">
+
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择权限</label>
+            <div class="layui-input-block">
+                <div id="LAY-auth-tree-index"></div>
+            </div>
+        </div>
+        <input type="hidden" name="roleid" value="{$roleid}"></input>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" name="dosubmit" value="1">提交</button>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+{include file='footer'/}
+<script type="text/javascript">
+    layui.extend({
+        authtree: 'extends/authtree'
+    });
+    //使用拓展模块
+    layui.use(['jquery', 'authtree', 'form', 'layer'], function(){
+        var $ = layui.jquery;
+        var authtree = layui.authtree;
+        var form = layui.form;
+        var layer = layui.layer;
+        $.ajax({
+            url:"{:url('role_priv',['do'=>1,'roleid'=>$roleid])}",
+            dataType: 'json',
+            success: function(res){
+                // 如果后台返回的不是树结构，请使用 authtree.listConvert 转换
+                var trees = authtree.listConvert(res.data.list, {
+                    primaryKey: 'id'
+                    ,startPid: 0
+                    ,parentKey: 'parentid'
+                    ,nameKey: 'name'
+                    ,valueKey: 'id'
+                    ,checkedKey: res.data.checkedId
+                });
+                authtree.render('#LAY-auth-tree-index', trees, {
+                    inputname: 'menuid[]',
+                    layfilter: 'lay-check-convert-auth',
+                    autowidth: true,
+                    openall: true,
+                    autoclose:false,
+                    theme: 'auth-skin-default',
+                    themePath: '__STATIC_ADMIN__js/extends/tree_themes/' // 主题路径，默认 layui_exts/tree_themes/
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

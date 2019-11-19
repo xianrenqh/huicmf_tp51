@@ -1,0 +1,90 @@
+{include file='header'/}
+<body>
+<!-- 顶部开始 -->
+<div class="container">
+    <div class="logo">
+        <a href="./index">HuiCMF V2.0</a>
+    </div>
+    <div class="left_open">
+        <!-- <i title="展开左侧栏" class="iconfont">&#xe699;</i> -->
+        <i title="展开左侧栏" class="layui-icon layui-icon-shrink-right"></i>
+
+    </div>
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item to-index">
+            <a href="javascript:;" onclick="clearcache('清除缓存','{:url("index/public_clear")}','800','500')" title="清除缓存"><i class="iconfont icon-delete"></i> 清除缓存</a>
+        </li>
+        <li class="layui-nav-item">
+            <i class="iconfont icon-profile"></i> {$rolename}
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">{$adminname}</a>
+            <dl class="layui-nav-child">
+                <!-- 二级菜单 -->
+                <dd>
+                    <a onclick="WeAdminShow('个人信息','{:url('admin_manage/public_edit_info')}','800','500')">个人信息</a>
+                </dd>
+                <dd>
+                    <a onclick="WeAdminShow('修改密码','{:url('admin_manage/public_edit_pwd')}','800','500')">修改密码</a>
+                </dd>
+                <dd>
+                    <a class="loginout" href="{:url('index/public_logout')}">退出</a>
+                </dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item to-index">
+            <a href="/" target="_blank"><i class="iconfont icon-home"></i> 前台首页</a>
+        </li>
+    </ul>
+
+</div>
+<!-- 顶部结束 -->
+<!-- 中部开始 -->
+<!-- 左侧菜单开始 -->
+<div class="left-nav">
+    <div id="side-nav"></div>
+</div>
+<!-- <div class="x-slide_left"></div> -->
+<!-- 左侧菜单结束 -->
+<!-- 右侧主体开始 -->
+<div class="page-content">
+    <div class="layui-tab tab" lay-filter="wenav_tab" id="WeTabTip" lay-allowclose="true">
+        <ul class="layui-tab-title" id="tabName">
+            <li>我的桌面</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe src='{:url('index/public_welcome')}' frameborder="0" scrolling="yes" class="weIframe"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg"></div>
+<!-- 右侧主体结束 -->
+<!-- 中部结束 -->
+<!-- 底部开始 -->
+<div class="footer">
+    <div class="copyright">Copyright ©2020 HuiCMF v2.0 All Rights Reserved</div>
+</div>
+{include file='footer'/}
+</body>
+<!--Tab菜单右键弹出菜单-->
+<ul class="rightMenu" id="rightMenu">
+    <li data-type="fresh">刷新</li>
+    <li data-type="current">关闭当前</li>
+    <li data-type="other">关闭其它</li>
+    <li data-type="all">关闭所有</li>
+</ul>
+</html>
+<script>
+    function clearcache(title,url){
+        $.get(url,function (res) {
+            layer.msg(res.message, {
+                icon: 1,
+                time: 2000
+            }, function(){
+                window.location.href =res.url;
+            });
+        })
+    }
+</script>
