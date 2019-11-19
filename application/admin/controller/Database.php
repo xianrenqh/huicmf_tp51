@@ -21,7 +21,7 @@ class Database extends Common
     public function __construct() {
         parent::__construct();
         $this->config = array(
-            'path'     => '../databack/', //备份文件目录
+            'path'     => './Data/', //备份文件目录
             'part'     => 2097152, //2MB
             'compress' => 1,    //数据库备份文件是否启用压缩 0不压缩 1 压缩
             'level'    => 4,	//数据库备份文件压缩级别 1普通 4 一般  9最高
@@ -140,7 +140,7 @@ class Database extends Common
         for($i=0;$i<count($tables);$i++){
             $start= $db->setFile($file)->backup($tables[$i]['name'], 0);
         }
-        return json(['message'=>'备份成功。请到根目录，databack 文件夹下查看','icon'=>1]);
+        return json(['message'=>'备份成功。请到根目录，Data 文件夹下查看','icon'=>1]);
     }
     
     /**

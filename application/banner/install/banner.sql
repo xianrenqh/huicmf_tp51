@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS `hui_banner`;
-CREATE TABLE `cmf_banner` (
+CREATE TABLE `hui_banner` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL DEFAULT '',
   `image` varchar(100) NOT NULL DEFAULT '',

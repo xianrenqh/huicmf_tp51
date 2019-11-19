@@ -61,8 +61,8 @@
         <div class="layui-form-item">
             <label for="status" class="layui-form-label">是否显示</label>
             <div class="layui-input-block" id="status">
-                <input type="radio" name="display" value="1" title="显示" {if ($datas.display="=1)}checked{/if}">
-                <input type="radio" name="display" value="0" title="隐藏" {if ($datas.display="=0)}checked{/if}">
+                <input type="radio" name="display" value="1" title="显示" {if($datas.display==1)}checked{/if}>
+                <input type="radio" name="display" value="0" title="隐藏" {if($datas.display==0)}checked{/if}>
             </div>
         </div>
         <div class="layui-form-item">
