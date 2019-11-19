@@ -1,22 +1,18 @@
 {
-    "name": "topthink/think",
-    "description": "the new thinkphp framework",
-    "type": "project",
-    "keywords": [
-        "framework",
-        "thinkphp",
-        "ORM"
-    ],
-    "homepage": "http://thinkphp.cn/",
+    "name": "xianrenqh/huicmf_tp51",
+    "description": "HuiCMF By ThinkPHP",
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "liu21st",
-            "email": "liu21st@gmail.com"
+            "name": "xiaohuihui",
+            "email": "762229008@qq.com"
         }
     ],
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.0.0"
+    },
+    "require": {
+        "php": ">=7.0.0",
         "topthink/framework": "5.1.*",
         "topthink/think-captcha": "2.0.*",
         "big-dream/think-paginator-driver": "^1.0",
@@ -30,8 +26,5 @@
     },
     "extra": {
         "think-path": "thinkphp"
-    },
-    "config": {
-        "preferred-install": "dist"
     }
 }
