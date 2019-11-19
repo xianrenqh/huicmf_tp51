@@ -32,7 +32,7 @@ HuiCMF 2.0其主要特性包括：
 使用composer安装
 
 ~~~
-composer create-project topthink/think tp
+composer create-project xianrenqh/huicmf_tp51
 ~~~
 
 然后就可以在浏览器中访问
