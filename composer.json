@@ -2,6 +2,7 @@
     "name": "xianrenqh/huicmf_tp51",
     "description": "HuiCMF By ThinkPHP",
     "license": "Apache-2.0",
+    "type": "project",
     "authors": [
         {
             "name": "xiaohuihui",
