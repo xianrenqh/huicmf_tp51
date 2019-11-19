@@ -38,13 +38,9 @@ composer create-project xianrenqh/huicmf_tp51
 然后就可以在浏览器中访问
 
 ~~~
-http://你的域名
+http://你的域名/install.php
 ~~~
 
-更新框架
-~~~
-composer update topthink/framework
-~~~
 
 ## 目录结构
 
