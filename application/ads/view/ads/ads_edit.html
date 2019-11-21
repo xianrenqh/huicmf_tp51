@@ -1,0 +1,76 @@
+{include file='../application/admin/view/header.html'/}
+
+<body>
+<div class="weadmin-body">
+    <form class="layui-form" action="javascript:;" onsubmit="return dosub(this)" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="we-red">*</span>广告名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="title" name="title" value="{$data.title}" lay-verify="required" autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接地址</label>
+            <div class="layui-input-block">
+                <input type="text" id="url" name="url" value="{$data.url}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">广告类型</label>
+            <div class="layui-input-inline">
+                <select  name="type" style="width:230px;" id="type">
+                    <option value="1" {if($data.type==1)}selected{/if}>文字形式</option>
+                    <option value="2" {if($data.type==2)}selected{/if}>HTML代码</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">内容/代码</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" id="code" name="code" class="layui-textarea" style="height:135px">{$data.code}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">简洁描述</label>
+            <div class="layui-input-block">
+                <input type="text" id="describe" name="describe" value="" autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <input type="hidden" name="dosubmit" value="1">
+            <input type="hidden" name="id" value="{$data.id}">
+            <button class="layui-btn"  lay-submit=""type="submit" name="dosubmit">确定</button>
+        </div>
+    </form>
+</div>
+
+{include file='../application/admin/view/footer.html'/}
+
+<script>
+    function dosub(obj) {
+        $.ajax({
+            type: 'POST',
+            url: '{:url('update')}',
+            data: $(obj).serialize(),
+            dataType: "json",
+            success: function (msg) {
+                if(msg.status == 1){
+                    layer.msg(msg.message, {
+                        icon: 1,
+                        time: 2000
+                    }, function(){
+                        parent.location.reload();
+                    });
+                }else{
+                    layer.msg(msg.message);
+                }
+            }
+        });
+        return false;
+    }
+</script>
+</body>
+</html>

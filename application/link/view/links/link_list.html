@@ -1,0 +1,107 @@
+{include file='../application/admin/view/header.html'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+    .layui-table th{text-align: center}
+</style>
+<body>
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">模块管理</a><span lay-separator="">/</span>
+            <a><cite>友情链接管理</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+    <div class="layui-row demoTable" style="margin: 5px auto 15px">
+        <div class="weadmin-block">
+            <a href="javascript:;" onclick="mydel()" class="layui-btn layui-btn-danger"><i class="layui-icon layui-icon-delete"></i> 批量删除</a>
+            <a class="layui-btn" onclick="add()" href="javascript:;"><i class="layui-icon layui-icon-add-circle-fine"></i>添加链接</a>
+            <span class="fr" style="line-height:40px;padding-right: 10px;">共有数据：<span  id="total"><?php echo $total;?></span> 条</span>
+        </div>
+        <form method="post" action="{:url('order')}" id="myform">
+            <table class="layui-table" style="text-align: center">
+                <thead >
+                <tr class="text-c">
+                    <th width="25"><input type="checkbox" lay-skin="primary"></th>
+                    <th >排序</th>
+                    <th>网站名称</th>
+                    <th>网站地址</th>
+                    <th>网站logo</th>
+                    <th>站长姓名</th>
+                    <th>链接类型</th>
+                    <th>添加时间</th>
+                    <th>状态</th>
+                    <th>管理操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $data as $vo}
+                <tr class="text-c">
+                    <td><input type="checkbox" value="{$vo.id}" name="id[]" lay-skin="primary"></td>
+                    <td align="center"><input type="text" class="input-text listorder" name="listorder[{$vo.id}]" value="{$vo.listorder}" style="width:40px;text-align: center"></td>
+                    <td><a href="{$vo.url}" target="_blank">{$vo.name}</a></td>
+                    <td><a href="{$vo.url}" target="_blank">{$vo.url}</a></td>
+                    <td>{if($vo.logo)}<img src="{$vo.logo}" style="height:32px;width:90px">{else}无logo{/if}</td>
+                    <td>{$vo.username}</td>
+                    <td>{$vo.linktype?"图片链接":"文字链接"}</td>
+                    <td>{$vo.addtime|date="Y-m-d H:i:s"}</td>
+                    <td>{if($vo.status)}<span class="layui-btn layui-btn-sm layui-btn-success">启用</span>{else}<span class="layui-btn layui-btn-sm layui-btn-danger">禁用</span>{/if}</td>
+                    <td>
+                        <a class="layui-btn layui-btn-sm layui-btn-success" onclick="check('{$vo.id}')">检测</a>
+                        <a class="layui-btn layui-btn-sm layui-btn-normal" onclick="edit('{$vo.id}')">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-sm" onclick="del('{$vo.id}')">删除</a>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {if($total!=0)}
+            <div class="layui-form-item readonly-bg">
+                <input class="layui-btn" name="dosubmit" value="排序" type="submit" style="margin-left: 16px;margin-top: 10px; margin-bottom: 10px;">
+            </div>
+            {/if}
+        </form>
+        <div class="mws-panel-content">
+            <div class="list-page">
+                {$data->render()|raw}
+            </div>
+        </div>
+
+    </div>
+</div>
+{include file='../application/admin/view/footer.html'/}
+<script>
+    function del(id){
+        WeAdminDel("{:url('del_one')}?id="+id);
+    }
+    function edit(id) {
+        WeAdminShow("编辑链接","{:url('update')}?id="+id,'880','500');
+    }
+    function add() {
+        WeAdminShow("添加链接","{:url('add')}",'800','500');
+    }
+    function check(id) {
+        $.post("{:url('check')}",{
+            id:id
+        },function (res) {
+            layer.msg(res.msg);
+        })
+    }
+    //删除
+    function mydel(){
+        if ($("input[name='id[]']:checked").length<1){
+            layer.alert('请勾选信息！');
+            return false;
+        }
+        layer.confirm('确认要删除吗？',function(index){
+            document.getElementById('myform').action='{:url('del_all')}';
+            document.getElementById('myform').submit();
+        });
+
+    }
+</script>
+
+</body>
+</html>

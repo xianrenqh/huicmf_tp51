@@ -385,3 +385,33 @@ function public_gethtml($ftype = '', $val = '', $setting = '')
         echo '<textarea name="value" class="layui-textarea"  placeholder="例如：214243830">'.$val.'</textarea>';
     }
 }
+
+// CurlPOST数据提交-----------------------------------------
+function cmf_curl_get($url,$heads=array(),$cookie='')
+{
+    $ch = @curl_init();
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36');
+    
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_HEADER,0);
+    curl_setopt($ch, CURLOPT_REFERER, $url);
+    curl_setopt($ch, CURLOPT_POST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    if(!empty($cookie)){
+        curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+    }
+    if(count($heads)>0){
+        curl_setopt ($ch, CURLOPT_HTTPHEADER , $heads );
+    }
+    $response = @curl_exec($ch);
+    if(curl_errno($ch)){//出错则显示错误信息
+        //print curl_error($ch);die;
+    }
+    curl_close($ch); //关闭curl链接
+    return $response;//显示返回信息
+}

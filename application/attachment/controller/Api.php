@@ -24,6 +24,7 @@ class Api extends Common
     
     function __construct()
     {
+        parent::__construct();
         $this->userid = Session::get('adminid') ? Session::get('adminid') : (Session::get('_userid') ? Session::get('_userid') : 0);
         $this->username = Session::get('adminname');
         $this->isadmin = Session::get('roleid') ? 1 : 0;

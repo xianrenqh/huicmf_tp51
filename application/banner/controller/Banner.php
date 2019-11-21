@@ -21,6 +21,7 @@ class Banner extends Common
     
     public function __construct()
     {
+        parent::__construct();
         $this->db_banner = Db::table('hui_banner');
         $this->db_banner_type = Db::table('hui_banner_type');
     }

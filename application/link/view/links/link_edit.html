@@ -1,0 +1,91 @@
+{include file='../application/admin/view/header.html'/}
+
+<body>
+<div class="weadmin-body">
+    <form class="layui-form" action="javascript:;" onsubmit="return dosub(this)" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="we-red">*</span>链接名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="name" name="name" value="{$data.name}" lay-verify="required" autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接地址</label>
+            <div class="layui-input-block">
+                <input type="text" id="url" name="url" value="{$data.url}" autocomplete="off" class="layui-input" lay-verify="url|required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接类型</label>
+            <div class="layui-input-inline">
+                <select  name="linktype" style="width:230px;" id="linktype">
+                    <option value="0" {if($data.linktype==0)}selected{/if}>文字链接</option>
+                    <option value="1" {if($data.linktype==1)}selected{/if}>logo链接</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">logo地址</label>
+            <div class="layui-input-block">
+                <input type="text" id="logo" name="logo" value="{$data.logo}" autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">站长姓名</label>
+            <div class="layui-input-block">
+                <input type="text" id="username" name="username" value="{$data.username}" autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" id="listorder" name="listorder" value="{$data.listorder}" autocomplete="off" class="layui-input" >
+            </div>
+            <div class="layui-form-mid layui-word-aux">[从小到大排列]</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="status" class="layui-form-label">是否启用</label>
+            <div class="layui-input-block" id="status">
+                <input type="radio" name="status" value="1" title="启用" {if($data.status==1)}checked{/if}>
+                <input type="radio" name="status" value="0" title="禁用" {if($data.status==0)}checked{/if}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <input type="hidden" name="dosubmit" value="1">
+            <input type="hidden" name="id" value="{$data.id}">
+            <button class="layui-btn"  lay-submit=""type="submit" name="dosubmit">确定</button>
+        </div>
+    </form>
+</div>
+
+{include file='../application/admin/view/footer.html'/}
+
+<script>
+    function dosub(obj) {
+        $.ajax({
+            type: 'POST',
+            url: '{:url('update')}',
+            data: $(obj).serialize(),
+            dataType: "json",
+            success: function (msg) {
+                if(msg.status == 1){
+                    layer.msg(msg.message, {
+                        icon: 1,
+                        time: 2000
+                    }, function(){
+                        parent.location.reload();
+                    });
+                }else{
+                    layer.msg(msg.message);
+                }
+            }
+        });
+        return false;
+    }
+</script>
+</body>
+</html>
