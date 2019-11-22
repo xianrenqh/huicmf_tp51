@@ -13,6 +13,7 @@ use think\facade\Request;
 use think\facade\View;
 use think\facade\Session;
 use think\Db;
+use think\Image;
 
 class Api extends Common
 {
@@ -59,6 +60,7 @@ class Api extends Common
             $fileinfo['filename']=$info->getFilename();
             $fileinfo['module'] =Request::param('module')?Request::param('module'): Request::module();
             $fileinfo['fileext']=$info->getExtension();
+            $this->add_water($fileinfo);
             $this->_att_write($fileinfo);
             return json(['status'=>1,'filetype'=>$info->getExtension(),'title'=>$info->getFilename(),'msg'=>$fileurl]);
         }else{
@@ -124,6 +126,20 @@ class Api extends Common
         $arr['uploadtime'] = time();
         $arr['uploadip'] = getip();
         Db::name('attachment')->data($arr)->insert();
+    }
+    
+    //添加水印
+    private function add_water($imginfo)
+    {
+        //获取水印配置
+        if(get_config('watermark_enable')){
+            $waterpic = "./static/water/".get_config('watermark_name');
+            $pic_url =".".$imginfo['filepath'].$imginfo['filename'];
+            $image=Image::open($pic_url);
+            $image->water($waterpic,get_config('watermark_position'))->save($pic_url);
+        }else{
+            return false;
+        }
     }
     
     

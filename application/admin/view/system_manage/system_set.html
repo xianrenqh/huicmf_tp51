@@ -174,12 +174,11 @@
                         <div class="layui-input-inline" >
                             <input type="text" id="watermark_name" name="watermark_name" value="<?php echo $data['watermark_name']?>"  autocomplete="off" class="layui-input">
                         </div>
-                        <div class="layui-input-inline" style="width: 50%" > [水印存放路径:/common/data/water]</div>
+                        <div class="layui-input-inline" style="width: 50%" > [水印存放路径:/public/static/water]</div>
                     </div>
                     <div class="layui-form-item">
                         <label  class="layui-form-label">水印的位置：</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="watermark_position" value="0" title="随机" {if ($data.watermark_position==0)}checked{/if}>
                             <input type="radio" name="watermark_position" value="1" title="顶部居左" {if ($data.watermark_position==1)}checked{/if}>
                             <input type="radio" name="watermark_position" value="2" title="顶部居中" {if ($data.watermark_position==2)}checked{/if}>
                             <input type="radio" name="watermark_position" value="3" title="顶部居右" {if ($data.watermark_position==3)}checked{/if}>
