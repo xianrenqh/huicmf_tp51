@@ -20,8 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PHPMailer\\PHPMailer\\": "src/",
-            "tp5er\\tp5-databackup\\": "src/"
+            "PHPMailer\\PHPMailer\\": "src/"
         }
     },
     "extra": {
