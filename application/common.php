@@ -83,6 +83,18 @@ function getip(){
     return preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '127.0.0.1';
 }
 
+
+
+/**
+ * 获取内容中的图片
+ * @param string $content 内容
+ * @return string
+ */
+function match_img($content){
+    preg_match('/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg]))[\'|\"].*?[\/]?>/', $content, $match);
+    return !empty($match) ? $match[1] : '';
+}
+
 /**
  * 获取请求地区
  * @param $ip

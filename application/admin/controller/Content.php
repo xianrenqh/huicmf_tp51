@@ -8,13 +8,18 @@
 
 namespace app\admin\controller;
 
+use lib\Form;
 use think\facade\Request;
 
-class Content
+class Content extends Common
 {
  
     public function init(){
-        var_dump(Request::param('cid'));
+        $Form = new Form();
+        $form_image = $Form->image('thumb');
+        return $this->fetch('test',[
+            'form_image' => $form_image
+        ]);
     }
     
 }

@@ -1,0 +1,43 @@
+{include file='header'/}
+<body>
+
+
+<div class="weadmin-body">
+    <h1>备注：要使用编辑器里的上传插件，要禁用tp的调试app_trace</h1>
+    <hr>
+
+    <form class="layui-form" action="javascript:;" onsubmit="return dosub(this)">
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片地址</label>
+            {$form_image|raw}
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="we-red">*</span>内容
+            </label>
+            <div class="layui-input-block">
+                <script id="container" name="content" type="text/plain"></script>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="auto_thum" value="1" title="提取内容第一张图片为缩略图" lay-skin="primary" checked>
+            </div>
+        </div>
+    </form>
+</div>
+{include file='footer'/}
+<script type="text/javascript" src="__LIB__ueditor/1.4.3.3/ueditor.config.js"></script>
+<script type="text/javascript" src="__LIB__ueditor/1.4.3.3/ueditor.all.min.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    /*var ue = UE.getEditor('container',{
+        initialFrameWidth:820,
+    });*/
+    var url='{:url('ueditor/index')}';
+    var ue = UE.getEditor('container',{
+        serverUrl :url,
+    });
+
+</script>
