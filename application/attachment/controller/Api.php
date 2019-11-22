@@ -136,7 +136,7 @@ class Api extends Common
             $waterpic = "./static/water/".get_config('watermark_name');
             $pic_url =".".$imginfo['filepath'].$imginfo['filename'];
             $image=Image::open($pic_url);
-            $image->water($waterpic,get_config('watermark_position'))->save($pic_url);
+            $image->water($waterpic,get_config('watermark_position'),get_config('watermark_touming'))->save($pic_url);
         }else{
             return false;
         }

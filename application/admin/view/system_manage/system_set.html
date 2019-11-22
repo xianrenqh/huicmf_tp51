@@ -190,6 +190,14 @@
                             <input type="radio" name="watermark_position" value="9" title="底部居右" {if ($data.watermark_position==9)}checked{/if}>
                         </div>
                     </div>
+                    <div class="layui-form-item " >
+                        <label class="layui-form-label">水印透明度：</label>
+                        <div class="layui-input-inline"  style="width:40%;margin-top:15px;">
+                            <div id="slideTest2" class="demo-slider"></div>
+                            <input type="hidden" name="watermark_touming" id="watermark_touming">
+                        </div>
+                        <div class="layui-input-inline" style="width: 30%" >   [水印透明度设置]</div>
+                    </div>
                 </div>
             </div>
             <div class="layui-form-item " >
@@ -203,8 +211,9 @@
 </div>
 {include file='footer'/}
 <script>
-    layui.use(['form','element'], function(){
+    layui.use(['form','element','slider'], function(){
         var $ = layui.jquery
+            ,slider = layui.slider
             ,form = layui.form
             ,element = layui.element;
         form.verify({
@@ -213,10 +222,19 @@
                 ,'站点根网址格式为：http://xiaohuihui.net.cn/，请以“/”结尾！'
             ]
         });
+        //定义初始值
+        slider.render({
+            elem: '#slideTest2'
+            ,value: '{$data.watermark_touming}'
+            ,theme: '#FF5722' //主题色
+            ,input: true //输入框
+        });
     });
 
     //保存
     function dosub(obj) {
+        var watermark_touming= $(".layui-slider-tips").text()||"{$data.watermark_touming}";
+        $("#watermark_touming").val(watermark_touming);
         $.ajax({
             type: 'POST',
             url: '{:url('save')}',
