@@ -274,7 +274,7 @@ INSERT INTO `hui_menu` VALUES (52, '修改分类', 50, 'admin', 'type', 'edit', 
 INSERT INTO `hui_menu` VALUES (53, '删除分类', 50, 'admin', 'type', 'del', '', 3, 0);
 INSERT INTO `hui_menu` VALUES (54, '列表页排序', 50, 'admin', 'type', 'order', '', 6, 0);
 INSERT INTO `hui_menu` VALUES (55, '列表页更改状态', 50, 'admin', 'type', 'change_status', '', 5, 0);
-
+INSERT INTO `hui_menu` VALUES (56, '上传案例', 1, 'admin', 'content', 'test', '', 99, 1);
 
 -- ----------------------------
 -- Table structure for hui_type

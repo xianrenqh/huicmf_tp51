@@ -14,7 +14,11 @@ use think\facade\Request;
 class Content extends Common
 {
  
-    public function init(){
+    public function init()
+    {
+        echo "内容管理";
+    }
+    public function test(){
         $Form = new Form();
         $form_image = $Form->image('thumb');
         return $this->fetch('test',[

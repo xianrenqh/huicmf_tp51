@@ -3,14 +3,34 @@
 
 
 <div class="weadmin-body">
-    <h1>备注：要使用编辑器里的上传插件，要禁用tp的调试app_trace</h1>
+    <h1>备注：要使用Ueditor编辑器里的上传插件，需禁用tp的调试app_trace</h1>
     <hr>
 
     <form class="layui-form" action="javascript:;" onsubmit="return dosub(this)">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>使用 Layui 自带，常规上传</legend>
+        </fieldset>
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传图片1</label>
+            <div class="layui-input-inline" style="width: 45%">
+                <input type="text" name="demo1"  value=""  onmouseover="hui_img_preview('demo1',this.value)" onmouseout="layer.closeAll();" id="demo1" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline" style="width: 120px">
+                <button type="button" class="layui-btn" id="test1" ><i class="layui-icon">&#xe67c;</i>上传图片</button>
+            </div>
+        </div>
+
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>使用 HuiCMF 自带模块上传</legend>
+        </fieldset>
         <div class="layui-form-item">
             <label class="layui-form-label">图片地址</label>
             {$form_image|raw}
         </div>
+
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>使用 Ueditor 自写方法上传</legend>
+        </fieldset>
         <div class="layui-form-item">
             <label class="layui-form-label">
                 <span class="we-red">*</span>内容
@@ -32,12 +52,28 @@
 <script type="text/javascript" src="__LIB__ueditor/1.4.3.3/ueditor.all.min.js"></script>
 <!-- 实例化编辑器 -->
 <script type="text/javascript">
-    /*var ue = UE.getEditor('container',{
-        initialFrameWidth:820,
-    });*/
     var url='{:url('ueditor/index')}';
     var ue = UE.getEditor('container',{
         serverUrl :url,
     });
 
+    layui.use(['form','upload'], function() {
+        var form = layui.form,
+            upload = layui.upload;
+        form.render();
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: "{:url('attachment/api/upload')}"
+            ,field:"Filedata"
+            ,done: function(res){
+                console.log(res.src)
+                if(res.status==1){
+                    $("#demo1").val(res.src);
+                }
+            }
+
+        })
+    });
 </script>
