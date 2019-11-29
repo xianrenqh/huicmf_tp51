@@ -1,0 +1,84 @@
+{include file='header'/}
+<body>
+<div class="weadmin-body">
+    <form class="layui-form" action="javascript:;" onsubmit="return dosub(this)">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="we-red">*</span>上级菜单
+            </label>
+            <div class="layui-input-inline">
+                <select name="type_pid" lay-verify="required">
+                    <option value="0">一级菜单</option>
+                    {volist name='typelist' id='vo'}
+                    <option value="{$vo.type_id}" {if($vo.type_id eq $thisid)}selected{/if}>{$vo.type_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="we-red">*</span>分类名称
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="type_name" name="type_name" lay-verify="required" autocomplete="off" class="layui-input xv_hanzi">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">别名</label>
+            <div class="layui-input-block">
+                <input type="text" id="type_en" name="type_en" autocomplete="off" class="layui-input xv_pinyin">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" id="type_sort" name="type_sort" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否启用</label>
+            <div class="layui-input-block" id="status">
+                <input type="radio" name="type_status" value="1" title="启用" checked>
+                <input type="radio" name="type_status" value="0" title="禁用">
+            </div>
+        </div>
+        <input type="hidden" name="dosubmit" value="1">
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn"  lay-submit="" >确定</button>
+        </div>
+    </form>
+</div>
+</body>
+{include file='footer'/}
+<script type="text/javascript" src="__STATIC_ADMIN__js/jquery.pinyin.js"></script>
+<script>
+    layui.use(['form','upload', 'layer','element'], function(){
+        var form = layui.form
+            ,element = layui.element;
+        /*通用简单的表单验证*/
+    });
+    function dosub(obj) {
+        $.ajax({
+            type: 'POST',
+            url: '{:url('add')}',
+            data: $(obj).serialize(),
+            dataType: "json",
+            success: function (msg) {
+                if(msg.status == 1){
+                    layer.msg(msg.message, {
+                        icon: 1,
+                        time: 2000
+                    }, function(){
+                        parent.location.reload();
+                    });
+                }else{
+                    layer.msg(msg.message);
+                }
+            }
+        });
+        return false;
+    }
+</script>

@@ -1,0 +1,66 @@
+{include file='header'/}
+<style>
+    .layui-breadcrumb {visibility: visible;}
+    .layui-table tr td input{width: 40px;text-align: center}
+</style>
+<body>
+
+<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+       		 <a href="">首页</a><span lay-separator="">/</span>
+        	<a href="">视频管理</a><span lay-separator="">/</span>
+            <a><cite>分类管理</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-sm" style="float:right;margin-top: 5px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon">&#xe9aa;</i></a>
+</div>
+<div class="weadmin-body">
+    <div class="weadmin-block">
+        <button class="layui-btn" onclick="WeAdminShow('添加分类','{:url('add')}','800','550')"><i class="layui-icon"></i>添加</button>
+        <span class="fr" style="line-height:40px;padding-right: 10px;">共有数据：<span  id="total">{$total}</span> 条</span>
+    </div>
+    <form action="{:url('order')}" method="post" class="layui-form">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th width="60">排序</th>
+                <th width="60">分类ID</th>
+                <th class="text-l">分类名称</th>
+                <th class="text-l">英文名称</th>
+                <th width="80">状态</th>
+                <th width="220">管理操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {$list|raw}
+            </tbody>
+        </table>
+        {if($total>0)}
+        <div class="layui-form-item readonly-bg">
+            <input class="layui-btn" name="dosubmit" value="排序" type="submit" style="margin-left: 16px;margin-top: 10px; margin-bottom: 10px;">
+        </div>
+        {else}
+        <h2 style="text-align:center">没有数据</h2>
+        {/if}
+    </form>
+</div>
+
+{include file='footer'/}
+</body>
+</html>
+<script>
+    layui.use(['form', 'layedit'], function() {
+        var form = layui.form
+            , layer = layui.layer;
+        //监听指定开关
+        form.on('switch(switchTest)', function(data){
+            $.post("{:url('change_status')}",{
+                id:this.id,
+                name:this.value,
+                status: (this.checked ? '1' : '0')
+            },function (res) {
+                layer.tips(res.msg, data.othis)
+            },"json");
+        });
+    });
+</script>

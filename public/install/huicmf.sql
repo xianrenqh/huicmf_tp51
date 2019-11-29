@@ -250,7 +250,7 @@ INSERT INTO `hui_menu` VALUES (28, '数据导入', 25, 'admin', 'database', 'imp
 INSERT INTO `hui_menu` VALUES (29, '备份文件下载', 25, 'admin', 'database', 'databack_down', '', 2, 0);
 INSERT INTO `hui_menu` VALUES (30, '备份文件删除', 25, 'admin', 'database', 'databack_del', '', 3, 0);
 INSERT INTO `hui_menu` VALUES (31, '立即备份', 24, 'admin', 'database', 'export_list', '', 0, 0);
-INSERT INTO `hui_menu` VALUES (32, ' 后台操作日志', 6, 'admin', 'admin_log', 'init', '', 11, 1);
+INSERT INTO `hui_menu` VALUES (32, '后台操作日志', 6, 'admin', 'admin_log', 'init', '', 11, 1);
 INSERT INTO `hui_menu` VALUES (33, '后台登录日志', 6, 'admin', 'admin_log', 'admin_login_log_list', '', 12, 1);
 INSERT INTO `hui_menu` VALUES (34, '自定义配置', 6, 'admin', 'system_manage', 'user_config_list', '', 2, 1);
 INSERT INTO `hui_menu` VALUES (35, '添加配置', 34, 'admin', 'system_manage', 'user_config_add', '', 1, 0);
@@ -268,6 +268,29 @@ INSERT INTO `hui_menu` VALUES (46, '删除一条内容', 1, 'admin', 'content', 
 INSERT INTO `hui_menu` VALUES (47, '单条删除配置', 34, 'admin', 'system_manage', 'user_config_del_one', '', 3, 0);
 INSERT INTO `hui_menu` VALUES (48, '删除管理员', 8, 'admin', 'admin_manage', 'del', '', 3, 0);
 INSERT INTO `hui_menu` VALUES (49, '删除角色', 9, 'admin', 'role', 'del', '', 4, 1);
+INSERT INTO `hui_menu` VALUES (50, '分类管理', 1, 'admin', 'type', 'init', '', 2, 1);
+INSERT INTO `hui_menu` VALUES (51, '添加分类', 50, 'admin', 'type', 'add', '', 1, 0);
+INSERT INTO `hui_menu` VALUES (52, '修改分类', 50, 'admin', 'type', 'edit', '', 2, 0);
+INSERT INTO `hui_menu` VALUES (53, '删除分类', 50, 'admin', 'type', 'del', '', 3, 0);
+INSERT INTO `hui_menu` VALUES (54, '列表页排序', 50, 'admin', 'type', 'order', '', 6, 0);
+INSERT INTO `hui_menu` VALUES (55, '列表页更改状态', 50, 'admin', 'type', 'change_status', '', 5, 0);
+
+
+-- ----------------------------
+-- Table structure for hui_type
+-- ----------------------------
+DROP TABLE IF EXISTS `hui_type`;
+CREATE TABLE `hui_type`  (
+  `type_id` int(10) NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `type_en` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `type_pid` int(10) NULL DEFAULT NULL COMMENT '父级id',
+  `type_status` int(1) NULL DEFAULT NULL COMMENT '状态',
+  `type_sort` int(10) NULL DEFAULT NULL COMMENT '排序',
+  `type_uptime` int(10) NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`type_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
 
 -- ----------------------------
 -- Table structure for hui_module
