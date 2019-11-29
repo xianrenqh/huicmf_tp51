@@ -9,10 +9,9 @@
 namespace app\attachment\controller;
 
 use app\admin\controller\Common;
-use think\facade\Request;
-use think\facade\View;
-use think\facade\Session;
 use think\Db;
+use think\facade\Request;
+use think\facade\Session;
 use think\Image;
 
 class Api extends Common
@@ -40,36 +39,34 @@ class Api extends Common
         $type = Request::param('type') ? Request::param('type') : 1;
         $module = Request::param('module') ? htmlspecialchars(Request::param('module')) : '';
         $option = [];
-        if($type == 1){
-            $option['allowtype'] =['gif','jpg', 'png', 'jpeg'];
-        }else{
+        if ($type == 1) {
+            $option['allowtype'] = ['gif', 'jpg', 'png', 'jpeg'];
+        } else {
             $option['allowtype'] = $this->_get_upload_types();
         }
         $file = request()->file('Filedata');
         $getsize = $file->getSize();
-        $info = $file
-            ->validate(['size'=>get_config('upload_maxsize')*1024,'ext'=>$option['allowtype']])
-            ->move( $this->filepath);
-        if($info){
-            $filename=str_replace('\\','/',$info->getSaveName());
-            $fileurl = str_replace("./","/",$this->filepath.$filename);
-            $fileinfo=[];
-            $fileinfo['originname']=$info->getInfo()['name'];
-            $fileinfo['filepath']=str_replace($info->getFilename(),"",$fileurl);
-            $fileinfo['filesize']=$getsize;
-            $fileinfo['filename']=$info->getFilename();
-            $fileinfo['module'] =Request::param('module')?Request::param('module'): Request::module();
-            $fileinfo['fileext']=$info->getExtension();
+        $info = $file->validate(['size' => get_config('upload_maxsize') * 1024, 'ext' => $option['allowtype']])->move($this->filepath);
+        if ($info) {
+            $filename = str_replace('\\', '/', $info->getSaveName());
+            $fileurl = str_replace("./", "/", $this->filepath . $filename);
+            $fileinfo = [];
+            $fileinfo['originname'] = $info->getInfo()['name'];
+            $fileinfo['filepath'] = str_replace($info->getFilename(), "", $fileurl);
+            $fileinfo['filesize'] = $getsize;
+            $fileinfo['filename'] = $info->getFilename();
+            $fileinfo['module'] = Request::param('module') ? Request::param('module') : Request::module();
+            $fileinfo['fileext'] = $info->getExtension();
             $this->add_water($fileinfo);
             $this->_att_write($fileinfo);
-            return json(['status'=>1,'filetype'=>$info->getExtension(),'title'=>$info->getFilename(),'msg'=>$fileurl]);
-        }else{
+            return json(['status' => 1, 'filetype' => $info->getExtension(), 'title' => $info->getFilename(), 'src' => $fileurl]);
+        } else {
             // 上传失败获取错误信息
-            return json(['msg'=>$file->getError(),'status'=>0]);
+            return json(['src' => $file->getError(), 'status' => 0]);
         }
     }
-        
-        /**
+    
+    /**
      * 上传框
      */
     public function upload_box()
@@ -85,17 +82,15 @@ class Api extends Common
             $type = '*.' . join(',*.', self::_get_upload_types());
         }
         //如果不是管理员，只列出自己上传的附件
-        $where ='1=1';
+        $where = '1=1';
         if (!$this->isadmin)
-            $where.= ['userid'=>'$this->userid'];
+            $where .= ['userid' => '$this->userid'];
         $attachment = Db::name('attachment');
-        $data = $attachment->field('isimage,originname,filename,filepath,fileext')->where($where)->order('id DESC')
-            ->paginate(8,false,['query'=>['tab'=>1]]);
+        $data = $attachment->field('isimage,originname,filename,filepath,fileext')->where($where)->order('id DESC')->paginate(8, false, ['query' => ['tab' => 1]]);
         $total = $data->total();
         $parameter = Request::param();
         $parameter['tab'] = 1;
-        View::assign(['total'=>$total,'data'=>$data,'type'=>$type,'s'=>$s,'n'=>$n,'t'=>$t,'module'=>$module,'pid'=>$pid]);
-        return $this->fetch('upload_box_html5');
+        return $this->fetch('upload_box_html5', ['total' => $total, 'data' => $data, 'type' => $type, 's' => $s, 'n' => $n, 't' => $t, 'module' => $module, 'pid' => $pid]);
     }
     
     /**
@@ -116,9 +111,10 @@ class Api extends Common
     /**
      * 上传附件写入数据库
      */
-    private function _att_write($fileinfo){
-
-        $arr=$fileinfo;
+    private function _att_write($fileinfo)
+    {
+        
+        $arr = $fileinfo;
         $arr['isimage'] = in_array($fileinfo['fileext'], array('gif', 'jpg', 'png', 'jpeg')) ? 1 : 0;
         $arr['downloads'] = 0;
         $arr['userid'] = $this->userid;
@@ -132,12 +128,12 @@ class Api extends Common
     private function add_water($imginfo)
     {
         //获取水印配置
-        if(get_config('watermark_enable')){
-            $waterpic = "./static/water/".get_config('watermark_name');
-            $pic_url =".".$imginfo['filepath'].$imginfo['filename'];
-            $image=Image::open($pic_url);
-            $image->water($waterpic,get_config('watermark_position'),get_config('watermark_touming'))->save($pic_url);
-        }else{
+        if (get_config('watermark_enable')) {
+            $waterpic = "./static/water/" . get_config('watermark_name');
+            $pic_url = "." . $imginfo['filepath'] . $imginfo['filename'];
+            $image = Image::open($pic_url);
+            $image->water($waterpic, get_config('watermark_position'), get_config('watermark_touming'))->save($pic_url);
+        } else {
             return false;
         }
     }

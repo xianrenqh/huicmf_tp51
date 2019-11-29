@@ -88,12 +88,12 @@
         'onUploadComplete' : function(file, data) {
             data = $.parseJSON(data);
             if(data.status == 1){
-                var att_url = data.filetype == 'jpg' || data.filetype == 'png' || data.filetype == 'gif' || data.filetype == 'jpeg' ? data.msg : (data.filetype == 'zip' || data.filetype == 'rar' ? '__STATIC_ADMIN__images/ext/rar.png' : '__STATIC_ADMIN__images/ext/blank.png');
-                var li='<li><a href="javascript:;" class="on" onclick="javascript:album_cancel(this)"><img src="'+att_url+'" path="'+data.msg+'" title="'+data.title+'"/><img src="__STATIC_ADMIN__images/checked.gif" class="checkd"></a></li>';
+                var att_url = data.filetype == 'jpg' || data.filetype == 'png' || data.filetype == 'gif' || data.filetype == 'jpeg' ? data.src : (data.filetype == 'zip' || data.filetype == 'rar' ? '__STATIC_ADMIN__images/ext/rar.png' : '__STATIC_ADMIN__images/ext/blank.png');
+                var li='<li><a href="javascript:;" class="on" onclick="javascript:album_cancel(this)"><img src="'+att_url+'" path="'+data.src+'" title="'+data.title+'"/><img src="__STATIC_ADMIN__images/checked.gif" class="checkd"></a></li>';
                 $("#uploadlist ul").prepend(li);
-                $('#att_status').append('|'+data.msg);
+                $('#att_status').append('|'+data.src);
             }else{
-                layer.alert(data.msg);
+                layer.alert(data.src);
             }
         }
     });
