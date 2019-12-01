@@ -44,7 +44,6 @@ class SystemManage extends Common
                 Db::name('config')->strict(false)->where(['name' => $key])->update(['value' => $value]);
                 cache('configs',null);
             }
-            cache('configs',$arr);
             return json(['message' => "保存成功", 'icon' => 2]);
         }
     }
