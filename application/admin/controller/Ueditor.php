@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: 小灰灰
+ * User: 程序猿
  * Date: 2019/11/22 0022
  * Time: 17:44
  */
@@ -36,69 +36,78 @@ class Ueditor extends Controller
         error_reporting(E_ERROR);
         header("Content-Type: text/html; charset=utf-8");
         
+        /* 旧，调用ueditor文件夹下的config.json配置文件
         $app_path = str_replace("\application\\", "", APP_PATH);
         $conf_path = file_get_contents($app_path . '\public\static\lib\ueditor\1.4.3.3\php\config.json');
-        
         $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", $conf_path), true);
-        
-        $action = $_GET['action'];
+        */
+        //新，调用config/ueditor.php
+        $CONFIG = config('ueditor.');
+        $action = input('action');
         
         switch ($action) {
             case 'config':
                 $result = json_encode($CONFIG);
                 break;
-            /* 上传图片 */ case 'uploadimage':
-            $fieldName = $CONFIG['imageFieldName'];
-            $result = $this->upFile($fieldName);
-            break;
-            /* 上传涂鸦 */ case 'uploadscrawl':
-            $config = array("pathFormat" => $CONFIG['scrawlPathFormat'], "maxSize" => $CONFIG['scrawlMaxSize'], "allowFiles" => $CONFIG['scrawlAllowFiles'], "oriName" => "scrawl.png");
-            $fieldName = $CONFIG['scrawlFieldName'];
-            $base64 = "base64";
-            $result = $this->upBase64($config, $fieldName);
-            break;
-            /* 上传视频 */ case 'uploadvideo':
-            $fieldName = $CONFIG['videoFieldName'];
-            $result = $this->upFile($fieldName);
-            break;
-            /* 上传文件 */ case 'uploadfile':
-            $fieldName = $CONFIG['fileFieldName'];
-            $result = $this->upFile($fieldName);
-            break;
-            /* 列出图片 */ case 'listimage':
-            $allowFiles = $CONFIG['imageManagerAllowFiles'];
-            $listSize = $CONFIG['imageManagerListSize'];
-            $path = $CONFIG['imageManagerListPath'];
-            $get = $_GET;
-            $result = $this->fileList($allowFiles, $listSize, $get);
-            break;
-            /* 列出文件 */ case 'listfile':
-            $allowFiles = $CONFIG['fileManagerAllowFiles'];
-            $listSize = $CONFIG['fileManagerListSize'];
-            $path = $CONFIG['fileManagerListPath'];
-            $get = $_GET;
-            $result = $this->fileList($allowFiles, $listSize, $get);
-            break;
-            /* 抓取远程文件 */ case 'catchimage':
-            $config = array("pathFormat" => $CONFIG['catcherPathFormat'], "maxSize" => $CONFIG['catcherMaxSize'], "allowFiles" => $CONFIG['catcherAllowFiles'], "oriName" => "remote.png");
-            $fieldName = $CONFIG['catcherFieldName'];
-            /* 抓取远程图片 */
-            $list = array();
-            isset($_POST[$fieldName]) ? $source = $_POST[$fieldName] : $source = $_GET[$fieldName];
-            
-            foreach ($source as $imgUrl) {
-                $info = json_decode($this->saveRemote($config, $imgUrl), true);
-                array_push($list, array("state" => $info["state"], "url" => $info["url"], "size" => $info["size"], "title" => htmlspecialchars($info["title"]), "original" => htmlspecialchars($info["original"]), "source" => htmlspecialchars($imgUrl)));
-            }
-            
-            $result = json_encode(array('state' => count($list) ? 'SUCCESS' : 'ERROR', 'list' => $list));
-            break;
+            //上传图片
+            case 'uploadimage':
+                $fieldName = $CONFIG['imageFieldName'];
+                $result = $this->upFile($fieldName);    //使用tp上传
+                break;
+            //上传涂鸦
+            case 'uploadscrawl':
+                $config = array("pathFormat" => $CONFIG['scrawlPathFormat'], "maxSize" => $CONFIG['scrawlMaxSize'], "allowFiles" => $CONFIG['scrawlAllowFiles'], "oriName" => "scrawl.png");
+                $fieldName = $CONFIG['scrawlFieldName'];
+                $base64 = "base64";
+                $result = $this->upBase64($config, $fieldName);
+                break;
+            //上传视频
+            case 'uploadvideo':
+                $fieldName = $CONFIG['videoFieldName'];
+                $result = $this->upFile($fieldName);
+                break;
+            //上传文件
+            case 'uploadfile':
+                $fieldName = $CONFIG['fileFieldName'];
+                $result = $this->upFile($fieldName);
+                break;
+            //列出图片
+            case 'listimage':
+                $allowFiles = $CONFIG['imageManagerAllowFiles'];
+                $listSize = $CONFIG['imageManagerListSize'];
+                $path = $CONFIG['imageManagerListPath'];
+                $get = $_GET;
+                $result = $this->fileList($allowFiles, $listSize, $get);
+                break;
+            //列出文件
+            case 'listfile':
+                $allowFiles = $CONFIG['fileManagerAllowFiles'];
+                $listSize = $CONFIG['fileManagerListSize'];
+                $path = $CONFIG['fileManagerListPath'];
+                $get = $_GET;
+                $result = $this->fileList($allowFiles, $listSize, $get);
+                break;
+            //抓取远程文件
+            case 'catchimage':
+                $config = array("pathFormat" => $CONFIG['catcherPathFormat'], "maxSize" => $CONFIG['catcherMaxSize'], "allowFiles" => $CONFIG['catcherAllowFiles'], "oriName" => "remote.png");
+                $fieldName = $CONFIG['catcherFieldName'];
+                //抓取远程图片
+                $list = array();
+                isset($_POST[$fieldName]) ? $source = $_POST[$fieldName] : $source = $_GET[$fieldName];
+                
+                foreach ($source as $imgUrl) {
+                    $info = json_decode($this->saveRemote($config, $imgUrl), true);
+                    array_push($list, array("state" => $info["state"], "url" => $info["url"], "size" => $info["size"], "title" => htmlspecialchars($info["title"]), "original" => htmlspecialchars($info["original"]), "source" => htmlspecialchars($imgUrl)));
+                }
+                
+                $result = json_encode(array('state' => count($list) ? 'SUCCESS' : 'ERROR', 'list' => $list));
+                break;
             default:
                 $result = json_encode(array('state' => '请求地址出错'));
                 break;
         }
         
-        /* 输出结果 */
+        //输出结果
         if (isset($_GET["callback"])) {
             if (preg_match("/^[\w_]+$/", $_GET["callback"])) {
                 echo htmlspecialchars($_GET["callback"]) . '(' . $result . ')';
@@ -114,12 +123,15 @@ class Ueditor extends Controller
     private function upFile($fieldName)
     {
         $file = request()->file($fieldName);
-        $info = $file->move('uploads');
-        
+        $ext = str_replace("|",",",get_config('upload_types'));
+        $conf_size = get_config('upload_maxsize')*1024;
+        $info = $file->validate(['size'=>$conf_size,'ext'=>$ext])->move( 'uploads');
+        $fileInfo = $info->getInfo();
+        $fileOldName = $fileInfo['name'];
         if ($info) {//上传成功
             $fname = './uploads/' . str_replace('\\', '/', $info->getSaveName());
             
-            $imgArr = explode(',', 'jpg,gif,png,jpeg,bmp,ttf,tif');
+            $imgArr = explode(',', 'jpg,gif,png,jpeg,bmp,tif,ttf');
             $imgExt = strtolower($info->getExtension());
             $isImg = in_array($imgExt, $imgArr);
             if ($isImg) {//如果是图片，开始处理
@@ -129,14 +141,11 @@ class Ueditor extends Controller
                     $pic_url = $fname;
                     $image = Image::open($pic_url);
                     $image->water($waterpic, get_config('watermark_position'), get_config('watermark_touming'))->save($pic_url);
-                } else {
-                    return false;
                 }
-                
                 //写入数据库
                 $fname1 = str_replace("./uploads", "/uploads", $fname);
                 $arr = [];
-                $arr['originname'] = $info->getFilename();
+                $arr['originname'] = $fileOldName;
                 $arr['filename'] = $info->getFilename();
                 $arr['filepath'] = str_replace($info->getFilename(), "", $fname1);
                 $arr['filesize'] = $info->getSize();
@@ -153,7 +162,7 @@ class Ueditor extends Controller
             
             $data = array('state' => 'SUCCESS', 'url' => str_replace("./uploads/", "/uploads/", $fname), 'title' => $info->getFilename(), 'original' => $info->getFilename(), 'type' => '.' . $info->getExtension(), 'size' => $info->getSize(),);
         } else {
-            $data = array('state' => $info->getError(),);
+            $data = array('state' => $file->getError(),);
         }
         return json_encode($data);
     }
@@ -164,25 +173,25 @@ class Ueditor extends Controller
         $dirname = './uploads/';
         $allowFiles = substr(str_replace(".", "|", join("", $allowFiles)), 1);
         
-        /* 获取参数 */
+        //获取参数
         $size = isset($get['size']) ? htmlspecialchars($get['size']) : $listSize;
         $start = isset($get['start']) ? htmlspecialchars($get['start']) : 0;
         $end = $start + $size;
         
-        /* 获取文件列表 */
+        //获取文件列表
         $path = $dirname;
         $files = $this->getFiles($path, $allowFiles);
         if (!count($files)) {
             return json_encode(array("state" => "no match file", "list" => array(), "start" => $start, "total" => count($files)));
         }
         
-        /* 获取指定范围的列表 */
+        //获取指定范围的列表
         $len = count($files);
         for ($i = min($end, $len) - 1, $list = array(); $i < $len && $i >= 0 && $i >= $start; $i--) {
             $list[] = $files[$i];
         }
         
-        /* 返回数据 */
+        //返回数据
         $result = json_encode(array("state" => "SUCCESS", "list" => $list, "start" => $start, "total" => count($files)));
         
         return $result;
@@ -245,7 +254,7 @@ class Ueditor extends Controller
         //打开输出缓冲区并获取远程图片
         ob_start();
         $context = stream_context_create(array('http' => array('follow_location' => false // don't follow redirects
-            )));
+        )));
         readfile($imgUrl, false, $context);
         $img = ob_get_contents();
         ob_end_clean();

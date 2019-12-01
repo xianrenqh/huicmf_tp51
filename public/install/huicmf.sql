@@ -176,7 +176,7 @@ INSERT INTO `hui_config` VALUES (19, 'watermark_enable', 2, '是否开启图片�
 INSERT INTO `hui_config` VALUES (20, 'watermark_name', 2, '水印图片名称', 'mark.png', '', '', 1);
 INSERT INTO `hui_config` VALUES (21, 'watermark_position', 2, '水印的位置', '9', '', '', 1);
 INSERT INTO `hui_config` VALUES (22, 'watermark_touming', 2, '水印透明度', '100', '', '', 1);
-INSERT INTO `hui_config` VALUES (23, 'upload_types', 2, '允许上传类型', 'zip|rar|mp3|mp4', '', '', 1);
+INSERT INTO `hui_config` VALUES (23, 'upload_types', 2, '允许上传类型', 'zip|rar|mp3|mp4|jpg|jpeg|png|gif|bmp', '', '', 1);
 
 -- ----------------------------
 -- Table structure for hui_content
