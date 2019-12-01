@@ -21,12 +21,14 @@ class SystemManage extends Common
      */
     public function init()
     {
-        if (Cache::get('configs')) {
+        if (is_array(Cache::get('configs'))) {
             $data = Cache::get('configs');
         } else {
-            $data = Db::name('config')->select();
+            $datalist = Db::name('config')->select();
+            $data= array_column($datalist,'value','name');
         }
-        View::assign(['data' => $data]);
+        $id = Request::param('id');
+        View::assign(['data' => $data,'id'=>$id]);
         return $this->fetch('system_set');
     }
     
@@ -40,8 +42,9 @@ class SystemManage extends Common
                 $arr[$key] = $value;
                 $value = htmlspecialchars($value);
                 Db::name('config')->strict(false)->where(['name' => $key])->update(['value' => $value]);
+                cache('configs',null);
             }
-            Cache::set('configs', $arr);
+            cache('configs',$arr);
             return json(['message' => "保存成功", 'icon' => 2]);
         }
     }
