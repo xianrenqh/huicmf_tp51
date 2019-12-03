@@ -22,6 +22,14 @@ function return_json($arr = []){
     die(json_encode($arr));
 }
 
+/*
+返回13位的时间戳
+*/
+function getMillisecond() {
+    list($t1, $t2) = explode(' ', microtime());
+    return (float)sprintf('%.0f',(floatval($t1)+floatval($t2))*1000);
+}
+
 /**
  * 获取系统配置信息
  * @param $key 键值，可为空，为空获取整个数组

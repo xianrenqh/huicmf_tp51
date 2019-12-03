@@ -12,7 +12,9 @@ use think\App;
 use think\Controller;
 use think\Db;
 use think\facade\Session;
+use think\facade\Request;
 use think\Image;
+use lib\FtpLib;
 
 class Ueditor extends Controller
 {
@@ -20,12 +22,33 @@ class Ueditor extends Controller
     private $userid;
     private $username;
     
+    private $upload_mode;
+    private $ftp_host;
+    private $ftp_port;
+    private $ftp_user;
+    private $ftp_pwd;
+    private $ftp_url;
+    private $ftp_path_article;
+    private $ftp_path_video;
+    private $ftp_path_comic;
+    
     function __construct()
     {
         parent::__construct();
         $this->userid = Session::get('adminid') ? Session::get('adminid') : (Session::get('_userid') ? Session::get('_userid') : 0);
         $this->username = Session::get('adminname');
         $this->isadmin = Session::get('roleid') ? 1 : 0;
+        
+        $this->upload_mode = get_config('upload_mode');
+        $this->ftp_host = get_config('ftp_host');
+        $this->ftp_port = get_config('ftp_port');
+        $this->ftp_user = get_config('ftp_user');
+        $this->ftp_pwd = get_config('ftp_pwd');
+        $this->ftp_url = get_config('ftp_url');
+        $this->ftp_path_article = get_config('ftp_path_article');
+        $this->ftp_path_video = get_config('ftp_path_video');
+        $this->ftp_path_comic = get_config('ftp_path_comic');
+        
     }
     
     public function index()
@@ -122,49 +145,79 @@ class Ueditor extends Controller
     //上传文件
     private function upFile($fieldName)
     {
-        $file = request()->file($fieldName);
-        $ext = str_replace("|",",",get_config('upload_types'));
-        $conf_size = get_config('upload_maxsize')*1024;
-        $info = $file->validate(['size'=>$conf_size,'ext'=>$ext])->move( 'uploads');
-        $fileInfo = $info->getInfo();
-        $fileOldName = $fileInfo['name'];
-        if ($info) {//上传成功
-            $fname = './uploads/' . str_replace('\\', '/', $info->getSaveName());
-            
-            $imgArr = explode(',', 'jpg,gif,png,jpeg,bmp,tif,ttf');
-            $imgExt = strtolower($info->getExtension());
-            $isImg = in_array($imgExt, $imgArr);
-            if ($isImg) {//如果是图片，开始处理
-                //获取水印配置
-                if (get_config('watermark_enable')) {
-                    $waterpic = "./static/water/" . get_config('watermark_name');
-                    $pic_url = $fname;
-                    $image = Image::open($pic_url);
-                    $image->water($waterpic, get_config('watermark_position'), get_config('watermark_touming'))->save($pic_url);
-                }
-                //写入数据库
-                $fname1 = str_replace("./uploads", "/uploads", $fname);
-                $arr = [];
-                $arr['originname'] = $fileOldName;
-                $arr['filename'] = $info->getFilename();
-                $arr['filepath'] = str_replace($info->getFilename(), "", $fname1);
-                $arr['filesize'] = $info->getSize();
-                $arr['fileext'] = $info->getExtension();
-                
-                $arr['isimage'] = 1;
-                $arr['downloads'] = 0;
-                $arr['userid'] = $this->userid;
-                $arr['username'] = $this->username;
-                $arr['uploadtime'] = time();
-                $arr['uploadip'] = getip();
-                Db::name('attachment')->data($arr)->insert();
-            }
-            
-            $data = array('state' => 'SUCCESS', 'url' => str_replace("./uploads/", "/uploads/", $fname), 'title' => $info->getFilename(), 'original' => $info->getFilename(), 'type' => '.' . $info->getExtension(), 'size' => $info->getSize(),);
-        } else {
-            $data = array('state' => $file->getError(),);
+        switch (input('act')){
+            case "article":
+                $file_path =get_config('ftp_path_article');
+                break;
+            case "video":
+                $file_path =get_config('ftp_path_video');
+                break;
+            case "comic":
+                $file_path =get_config('ftp_path_comic');
+                break;
+            default:
+                $file_path='/uploads/ueditor/';
+                break;
         }
-        return json_encode($data);
+        switch ($this->upload_mode){
+            case 'local':   //上传到本地服务器
+                $file = request()->file($fieldName);
+                $ext = str_replace("|",",",get_config('upload_types'));
+                $conf_size = get_config('upload_maxsize')*1024;
+                $info = $file->validate(['size'=>$conf_size,'ext'=>$ext])->move(".".$file_path);
+                $fileInfo = $info->getInfo();
+                $fileOldName = $fileInfo['name'];
+                if ($info) {//上传成功
+                    $filename=str_replace('\\','/',$info->getSaveName());
+                    $fname = $file_path.$filename;
+                    $imgArr = explode(',', 'jpg,gif,png,jpeg,bmp,tif,ttf');
+                    $imgExt = strtolower($info->getExtension());
+                    $isImg = in_array($imgExt, $imgArr);
+                    if ($isImg) {//如果是图片，开始处理
+                        //获取水印配置
+                        $this->add_water(".".$fname);
+                        //写入数据库
+                    }
+                    $data = array('state' => 'SUCCESS', 'url' => str_replace("./uploads/", "/uploads/", $fname), 'title' => $info->getFilename(), 'original' => $info->getFilename(), 'type' => '.' . $info->getExtension(), 'size' => $info->getSize(),);
+                } else {
+                    $data = array('state' => $file->getError(),);
+                }
+                return json_encode($data);
+                break;
+            case 'Ftp':     //上传到ftp服务器
+                $ftp_conn =  new FtpLib();
+                if($ftp_conn->connect()==1){
+                    $File = $_FILES[$fieldName];
+                    $get_ftp_url = get_config('ftp_url');
+                    $file_p=$File['tmp_name'];
+                    $file_name = md5(getMillisecond());
+                    $file_ext = $this->get_file_ext($File['name']);
+                    $newpath = $file_path.$file_name.".".$file_ext;
+                    $this->add_water($file_p);
+                    $dd=$ftp_conn->up_file($file_p,$newpath);
+                    if($dd['code']==1){
+                        $data = (['state'=>'SUCCESS','title'=>$get_ftp_url.$newpath,'filetype'=>$file_ext,'url'=>$get_ftp_url.$newpath,'msg'=>$dd['msg']]);
+                    }
+                }else{
+                    $data =(['state'=>'FTP配置错误，请检查！！！','msg'=>'FTP配置错误，请检查！！！']);
+                }
+                return json_encode($data);
+                break;
+        }
+    }
+    
+    //添加水印
+    private function add_water($imginfo)
+    {
+        //获取水印配置
+        if(get_config('watermark_enable')){
+            $waterpic = "./static/water/".get_config('watermark_name');
+            $pic_url =$imginfo;
+            $image=Image::open($pic_url);
+            $image->water($waterpic,get_config('watermark_position'),get_config('watermark_touming'))->save($pic_url);
+        }else{
+            return true;
+        }
     }
     
     //列出图片
@@ -334,6 +387,16 @@ class Ueditor extends Controller
         }
         
         return json_encode($data);
+    }
+    
+    //获取上传文件后缀
+    private function get_file_ext($file_name)
+    {
+        $temp_arr = explode(".", $file_name);
+        $file_ext = array_pop($temp_arr);
+        $file_ext = trim($file_ext);
+        $file_ext = strtolower($file_ext);
+        return $file_ext;
     }
     
 }

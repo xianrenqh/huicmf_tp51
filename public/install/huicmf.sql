@@ -177,6 +177,14 @@ INSERT INTO `hui_config` VALUES (20, 'watermark_name', 2, '水印图片名称', 
 INSERT INTO `hui_config` VALUES (21, 'watermark_position', 2, '水印的位置', '9', '', '', 1);
 INSERT INTO `hui_config` VALUES (22, 'watermark_touming', 2, '水印透明度', '100', '', '', 1);
 INSERT INTO `hui_config` VALUES (23, 'upload_types', 2, '允许上传类型', 'zip|rar|mp3|mp4|jpg|jpeg|png|gif|bmp', '', '', 1);
+INSERT INTO `hui_config` VALUES (24, 'upload_mode', 2, '图片上传方式', 'local', '', '', 1);
+INSERT INTO `hui_config` VALUES (25, 'ftp_host', 2, 'FTP服务器地址', '', '', ' ', 1);
+INSERT INTO `hui_config` VALUES (26, 'ftp_port', 2, 'FTP端口', '21', '', ' ', 1);
+INSERT INTO `hui_config` VALUES (27, 'ftp_user', 2, 'FTP账号', '', '', ' ', 1);
+INSERT INTO `hui_config` VALUES (28, 'ftp_pwd', 2, 'FTP密码', '', '', ' ', 1);
+INSERT INTO `hui_config` VALUES (29, 'ftp_url', 2, '外链url地址', '', '', ' ', 1);
+INSERT INTO `hui_config` VALUES (30, 'ftp_path', 2, '文章保存路径', '/uploads/', '', ' ', 1);
+
 
 -- ----------------------------
 -- Table structure for hui_content

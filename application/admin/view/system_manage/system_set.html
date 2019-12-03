@@ -198,15 +198,68 @@
                         </div>
                         <div class="layui-input-inline" style="width: 30%" >   [水印透明度设置]</div>
                     </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">保存方式：</label>
+                        <div class="layui-input-inline">
+                            <select class="w150" name="upload_mode" lay-filter="upload_mode">
+                                <option value="local" {if ($data.upload_mode=='local')}selected{/if}>本地保存</option>
+                                <option value="Ftp" {if ($data.upload_mode=='Ftp')}selected{/if}>FTP存储</option>
+                            </select>
+                        </div>
+                        <div class="upload_mode mode_Ftp" {if ($data.upload_mode!='Ftp')} style="display:none"{/if}>
+                        <label class="layui-form-label">FTP存储：</label>
+                        <div class="layui-input-inline">
+                            <a href="javascript:;" class="layui-btn layui-btn-primary" onclick="check_ftp()">点击测试FTP连接</a>
+                        </div>
+                        [先保存，再测试]
+                    </div>
+
                 </div>
-            </div>
-            <div class="layui-form-item " >
-                <label class="layui-form-label"></label>
-                <div class="layui-input-inline" style="width: 80%">
-                    <input type="hidden" name="dosubmit" value="1">
-                    <input class="layui-btn" type="submit" value="立即保存" lay-submit="" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label">存储路径：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="ftp_path" placeholder="存储路径" value="{$data.ftp_path}" class="layui-input" >
+                    </div>
+                    [前后斜杠不要少了]
                 </div>
+
+                <div class="layui-form-item upload_mode mode_Ftp" {if ($data.upload_mode!='Ftp')} style="display:none"{/if} >
+                <div class="layui-form-item">
+                    <label class="layui-form-label">服务器：</label>
+                    <div class="layui-input-inline w200">
+                        <input type="text" name="ftp_host" id="ftp_host" placeholder="ip或域名" value="{$data.ftp_host}" class="layui-input" >
+                    </div>
+                    <label class="layui-form-label">ftp端口：</label>
+                    <div class="layui-input-inline w100">
+                        <input type="text" name="ftp_port" id="ftp_port" placeholder="端口号" value="{$data.ftp_port}" class="layui-input" >
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">ftp账号：</label>
+                    <div class="layui-input-inline w100">
+                        <input type="text" name="ftp_user" id="ftp_user" placeholder="ftp账号" value="{$data.ftp_user}" class="layui-input" >
+                    </div>
+                    <label class="layui-form-label">ftp密码：</label>
+                    <div class="layui-input-inline w100">
+                        <input type="text" name="ftp_pwd" id="ftp_pwd" placeholder="ftp密码" value="{$data.ftp_pwd}" class="layui-input" >
+                    </div>
+                    <label class="layui-form-label">外链URL：</label>
+                    <div class="layui-input-inline w200">
+                        <input type="text" name="ftp_url" placeholder="外链URL" value="{$data.ftp_url}" class="layui-input" >
+                    </div>
+                </div>
+
+
             </div>
+        </div>
+        <div class="layui-form-item " >
+            <label class="layui-form-label"></label>
+            <div class="layui-input-inline" style="width: 80%">
+                <input type="hidden" name="dosubmit" value="1">
+                <input class="layui-btn" type="submit" value="立即保存" lay-submit="" >
+            </div>
+        </div>
     </form>
 </div>
 {include file='footer'/}
@@ -221,6 +274,11 @@
                 /^http(.+)\/$/
                 ,'站点根网址格式为：http://xiaohuihui.net.cn/，请以“/”结尾！'
             ]
+        });
+        form.on('select(upload_mode)', function(data){
+            console.log(data.value);
+            $('.upload_mode').hide();
+            $('.mode_'+ data.value).show();
         });
         //定义初始值
         slider.render({
@@ -270,6 +328,27 @@
                     layer.msg(res.msg, {icon: res.icon});
                 })
         }
+    }
+    //测试ftp连接是否正常
+    function check_ftp() {
+        var ftp_host = $("#ftp_host").val();
+        var ftp_port = $("#ftp_port").val();
+        var ftp_user = $("#ftp_user").val();
+        var ftp_pwd = $("#ftp_pwd").val();
+        if(ftp_host==''||ftp_port==''||ftp_user==''||ftp_pwd==''){
+            layer.msg('FTP的4项配置不能为空');
+            return false;
+        }
+        var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        $.post("{:url('public_check_ftp')}",{
+            ftp_host:ftp_host,
+            ftp_port:ftp_port,
+            ftp_user:ftp_user,
+            ftp_pwd:ftp_pwd
+        },function (res) {
+            layer.close(index);
+            layer.msg(res.msg,{icon:res.icon});
+        })
     }
 </script>
 </body>

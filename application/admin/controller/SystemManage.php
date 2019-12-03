@@ -8,6 +8,7 @@
 
 namespace app\admin\controller;
 
+use lib\FtpLib;
 use think\Db;
 use think\facade\Cache;
 use think\facade\Request;
@@ -163,6 +164,23 @@ class SystemManage extends Common
         $mail_body = "<h2>这是一封测试邮件，测试是否发送成功。</h2><br>发送时间：".date("Y-m-d H:i:s",time());
         $sendmail = $phpmail->email($mail_to,$mail_title,$mail_body);
         return $sendmail;
+    }
+    
+    //测试ftp连接
+    public function public_check_ftp()
+    {
+        $post_data = input();
+        $ftp_conn =  new FtpLib();
+        if($ftp_conn->connect()=='-1'){
+            return json(['code'=>1001,'msg'=>'FTP服务器连接失败! 请检查服务器地址和端口','icon'=>2]);
+        }elseif ($ftp_conn->connect()=='-2'){
+            return json(['code'=>1001,'msg'=>'FTP服务器登录失败','icon'=>2]);
+        }elseif ($ftp_conn->connect()=='-3'){
+            return json(['code'=>1001,'msg'=>'FTP模块不支持，请先开启！！','icon'=>2]);
+        }
+        else{
+            return json(['code'=>1,'msg'=>'FTP连接成功','icon'=>1]);
+        }
     }
     
 }
