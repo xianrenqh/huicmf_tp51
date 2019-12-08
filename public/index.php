@@ -20,6 +20,8 @@ define('HTTP_REFERER', isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'
 
 define('APP_PATH', str_replace("\public","",__DIR__ . '\application\\'));
 
+define('ROOT_PATH', dirname(__FILE__)); //这是程序目录常量
+
 // 加载基础文件
 require __DIR__ . '/../thinkphp/base.php';
 

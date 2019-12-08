@@ -283,6 +283,11 @@ INSERT INTO `hui_menu` VALUES (53, '删除分类', 50, 'admin', 'type', 'del', '
 INSERT INTO `hui_menu` VALUES (54, '列表页排序', 50, 'admin', 'type', 'order', '', 6, 0);
 INSERT INTO `hui_menu` VALUES (55, '列表页更改状态', 50, 'admin', 'type', 'change_status', '', 5, 0);
 INSERT INTO `hui_menu` VALUES (56, '上传案例', 1, 'admin', 'content', 'test', '', 99, 1);
+INSERT INTO `hui_menu` VALUES (57, '文件管理器', 4, 'file', 'file', 'index', '', 5, 1);
+INSERT INTO `hui_menu` VALUES (58, '编辑文件', 57, 'file', 'file', 'edit', '', 1, 0);
+INSERT INTO `hui_menu` VALUES (59, '删除文件', 57, 'file', 'file', 'del', '', 2, 0);
+INSERT INTO `hui_menu` VALUES (60, '重命名文件', 57, 'file', 'file', 'rname', '', 3, 0);
+INSERT INTO `hui_menu` VALUES (61, '下载文件', 57, 'file', 'file', 'down', '', 4, 0);
 
 -- ----------------------------
 -- Table structure for hui_type
@@ -325,5 +330,6 @@ INSERT INTO `hui_module` VALUES ('admin', '后台模块', 1, '1.0', '后台模�
 INSERT INTO `hui_module` VALUES ('index', '前台模块', 1, '1.0', '前台模块', '', 0, 0, '2019-01-27', '2019-01-27');
 INSERT INTO `hui_module` VALUES ('api', '接口模块', 1, '1.0', '为整个系统提供接口', '', 0, 0, '2019-01-27', '2019-01-27');
 INSERT INTO `hui_module` VALUES ('attachment', '附件模块', 1, '1.0', '附件模块', '', 0, 0, '2019-07-10', '2019-07-10');
+INSERT INTO `hui_module` VALUES ('file', '文件管理器', 1, '1.0', '文件管理器', '', 0, 0, '2019-12-08', '2019-12-08');
 
 SET FOREIGN_KEY_CHECKS = 1;
