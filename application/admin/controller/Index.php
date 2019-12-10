@@ -123,8 +123,9 @@ class Index extends Common
     //获取后台菜单，并转换成json输出
     public function public_showmenu()
     {
-        if(Cache::get('index_menu_list')){
-            $menu_list=Cache::get('index_menu_list');
+        if(Cache::get('index_menu_list'.Session::get('roleid'))){
+            $menu_list=Cache::get('index_menu_list'.Session::get('roleid'));
+            $iscache = 1;
         }else{
             $menu_list=Db::name('menu')
                 ->field('`id`,`name`,`m`,`c`,`a`,`data`')
@@ -162,7 +163,8 @@ class Index extends Common
                     unset($menu_list[$key]);
                 }
             }
-            Cache::set('index_menu_list',$menu_list);
+            $iscache=0;
+            Cache::set('index_menu_list'.Session::get('roleid'),$menu_list);
         }
         return json(['status'=>0,'msg'=>'ok','data'=>$menu_list]);
     }
