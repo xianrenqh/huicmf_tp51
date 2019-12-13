@@ -91,6 +91,38 @@ function getip(){
     return preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '127.0.0.1';
 }
 
+/**
+ * 根据IP获取请求地区（太平洋IP库）
+ * @param $ip
+ * @return 所在位置
+ */
+function get_address($ip){
+    if($ip == '127.0.0.1') return '本地地址';
+    $content = @file_get_contents('http://whois.pconline.com.cn/ipJson.jsp?ip='.$ip.'&json=true');
+    $content=iconv('GB2312', 'UTF-8', $content);
+    $arr = json_decode($content, true);
+    if(is_array($arr)&& $arr['regionCode']==0){
+        return $arr['addr'];
+    }else{
+        return '未知';
+    }
+}
+
+/**
+ * 根据IP获取请求地区（淘宝IP库，不能刷新太频繁，否则502）
+ * @param $ip
+ * @return 所在位置
+ */
+function get_address_old($ip){
+    if($ip == '127.0.0.1') return '本地地址';
+    $content = @file_get_contents('http://ip.taobao.com/service/getIpInfo.php?ip='.$ip);
+    $arr = json_decode($content, true);
+    if(is_array($arr) && $arr['code']==0){
+        return $arr['data']['country'].'-'.$arr['data']['region'].'-'.$arr['data']['city'];
+    }else{
+        return '未知';
+    }
+}
 
 
 /**
@@ -103,21 +135,6 @@ function match_img($content){
     return !empty($match) ? $match[1] : '';
 }
 
-/**
- * 获取请求地区
- * @param $ip
- * @return 所在位置
- */
-function get_address($ip){
-    if($ip == '127.0.0.1') return '本地地址';
-    $content = @file_get_contents('http://ip.taobao.com/service/getIpInfo.php?ip='.$ip);
-    $arr = json_decode($content, true);
-    if(is_array($arr) && $arr['code']==0){
-        return $arr['data']['country'].'-'.$arr['data']['region'].'-'.$arr['data']['city'];
-    }else{
-        return '未知';
-    }
-}
 
 
 /**
