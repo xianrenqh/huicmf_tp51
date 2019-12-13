@@ -2,7 +2,7 @@
 <body>
 <div class="weadmin-body">
     <blockquote class="layui-elem-quote">欢迎使用 小灰灰内容管理系统 <span class="f-14">v2.0</span>！</blockquote>
-    <p>上次登录IP：{$getinfo.loginip} 上次登录时间：{$getinfo.logintime|date='Y-m-d H:i:s'}
+    <p>上次登录IP：{$getinfo.last_loginip} 上次登录时间：{$getinfo.last_logintime|date='Y-m-d H:i:s'}
         [ <a data-title="登录日志"   onclick="WeAdminShow('后台登录日志','{:url('admin_log/admin_login_log_list')}','1000','680')" href="javascript:void(0)">登录日志</a> ]
     </p>
 

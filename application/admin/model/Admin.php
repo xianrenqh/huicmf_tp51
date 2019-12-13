@@ -29,15 +29,17 @@ class Admin extends Model
         $res = Db::name('admin')->where('adminname', $adminname)->find();
         if (!$res) {
             Db::name('admin_login_log')->insert(['adminname' => $adminname, 'logintime' => time(), 'loginip' => $loginip, 'address'=>get_address($loginip),'password' => $password, 'loginresult' => 0, 'cause' => '用户名不存在！']);
-            $res = ['tips' => '用户名密码不正确！', 'status' => 0];
-            return json_encode($res);
+            $res_data = ['tips' => '用户名密码不正确！', 'status' => 0];
+            return json_encode($res_data);
             return false;
         }
         if ($res['status'] == 0) {
             Db::name('admin_login_log')->insert(['adminname' => $adminname, 'logintime' => time(), 'loginip' => $loginip, 'address'=>get_address($loginip),'password' => $password, 'loginresult' => 0, 'cause' => '用户已被锁定！']);
-            $res = ['tips' => '用户已被锁定！', 'status' => 0];
+            $res_data = ['tips' => '用户已被锁定！', 'status' => 0];
         }else{
             if (password($password) == $res['password'] ) {
+                Session::set('last_loginip',$res['loginip']);
+                Session::set('last_logintime',$res['logintime']);
                 Db::name('admin')->where('adminid',$res['adminid'])->update(['loginip'=>$loginip,'logintime'=>time()]);
                 //写入日志
                 Db::name('admin_login_log')->insert(['adminname' => $adminname, 'logintime' => time(), 'loginip' => $loginip, 'address'=>get_address($loginip),'password' => '***', 'loginresult' => 1, 'cause' => '登录成功！']);
@@ -49,14 +51,14 @@ class Admin extends Model
                 Session::set('rolename',$getrolename['rolename']);
                 Cookie::set('adminid',$res['adminid']);
                 Cookie::set('adminname',$res['adminname']);
-                $res = ['tips' => '登录成功，正在跳转~~~', 'status' => 1];
+                $res_data = ['tips' => '登录成功，正在跳转~~~', 'status' => 1];
             } else {
                 //写入日志
                 Db::name('admin_login_log')->insert(['adminname' => $adminname, 'logintime' => time(), 'loginip' => $loginip, 'address'=>get_address($loginip),'password' => $password, 'loginresult' => 0, 'cause' => '密码错误！']);
-                $res = ['tips' => '用户名密码不正确！', 'status' => 0];
+                $res_data = ['tips' => '用户名密码不正确！', 'status' => 0];
             }
         }
-        return json_encode($res);
+        return json_encode($res_data);
     }
     
 }

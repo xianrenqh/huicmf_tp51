@@ -34,6 +34,9 @@ class Index extends Common
         $rs = Db::query('select VERSION() as sqlversion');
         
         $getinfo = Db::name('admin')->where('adminid',Session::get('adminid'))->find();
+        $getinfo['last_logintime']= session('last_logintime');
+        $getinfo['last_loginip']= session('last_loginip');
+        
         return $this->fetch('welcome',[
             'getinfo'=>$getinfo,'sqlversion'=>$rs[0]['sqlversion']
         ]);
