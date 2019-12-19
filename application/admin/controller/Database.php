@@ -113,7 +113,7 @@ class Database extends Common
         $list = $db->fileList();
         if(count($list)>0){
             foreach($list as $key=>$v){
-                $list1['filename']=$key;
+                $list1['filename']=$v['name'];
                 $list1['filesize']=sizecount($v['size']);
                 $list1['backtime']=date('Y-m-d H:i:s',$v['time']);
                 $list1['part']=$v['part'];
