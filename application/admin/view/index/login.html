@@ -53,14 +53,14 @@
 </html>
 <script>
     $(function () {
-        $("#sub").click(function () {
-            $("#clicaptcha-submit-info").clicaptcha({
-                src: "{:url('codecaptcha/getbing_bgpic')}",
-                callback: function () {
-                    $("#form").submit()
-                }
-            })
-        });
+      $("#sub").click(function () {
+        $("#clicaptcha-submit-info").clicaptcha({
+          src: "{:url('codecaptcha/code_captcha')}",
+          callback: function () {
+            $("#form").submit()
+          }
+        })
+      });
         var i = 0;
         $(".click_pic_a").click(function () {
             i += 1;
