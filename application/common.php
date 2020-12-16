@@ -485,3 +485,42 @@ function cmf_curl_get($url,$heads=array(),$cookie='')
     curl_close($ch); //关闭curl链接
     return $response;//显示返回信息
 }
+
+// 过滤段落文字
+if ( ! function_exists('string_filter')) {
+    function string_filter($str)
+    {
+        $filter = [
+            '|',
+            '&',
+            '*',
+            ';',
+            '$',
+            '%',
+            "'",
+            "\"",
+            "\\'",
+            "\\\"",
+            "<",
+            ">",
+            "+",
+            "\\",
+            "!",
+            "insert",
+            "delete",
+            "select",
+            "1=1",
+            "update",
+            "sleep",
+            "union"
+        ];
+        $str2 = preg_replace_callback("|<.*>|iUs","xss_filter",strtolower($str));
+        $str2   = str_ireplace($filter, '', $str2);
+        $str2   = preg_replace("{\t}", "", $str2);
+        $str2   = preg_replace("{\r\n}", "", $str2);
+        $str2   = preg_replace("{\r}", "", $str2);
+        $str2   = preg_replace("{\n}", "", $str2);
+
+        return $str2;
+    }
+}

@@ -479,16 +479,16 @@
         },
         {
             "name": "topthink/think-orm",
-            "version": "v2.0.33",
+            "version": "v2.0.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-orm.git",
-                "reference": "35ca511a1e4d671b39f7afb4c887703c16ef6957"
+                "reference": "57f9b98895b0ff4ae7b7b75e51456fd8cb8fb629"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-orm/zipball/35ca511a1e4d671b39f7afb4c887703c16ef6957",
-                "reference": "35ca511a1e4d671b39f7afb4c887703c16ef6957",
+                "url": "https://api.github.com/repos/top-think/think-orm/zipball/57f9b98895b0ff4ae7b7b75e51456fd8cb8fb629",
+                "reference": "57f9b98895b0ff4ae7b7b75e51456fd8cb8fb629",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -526,7 +526,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2020-06-22T14:57:28+00:00"
+            "time": "2020-09-28T08:24:57+00:00"
         },
         {
             "name": "xianrenqh/tp5-databackup",
