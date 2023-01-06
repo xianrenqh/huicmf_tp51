@@ -7,6 +7,9 @@
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
 [![License](https://poser.pugx.org/topthink/framework/license)](https://packagist.org/packages/topthink/framework)
 
+## 此项目不再更新，请使用tp6版本的：
+https://github.com/xianrenqh/huicmf_tp6
+
 HuiCMF 2.0 其主要特性包括：
 
 - 一键安装程序（install文件夹）
